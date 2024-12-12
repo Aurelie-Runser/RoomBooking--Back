@@ -1,0 +1,52 @@
+@ReservationDeSalle__Back_HostAddress = http://localhost:5010
+
+
+# Avec l'extention "REST Client"
+# Tu peux tester les routes suivante juste en cliquant sur le texte "Send request"
+# présente au dessus des GET/POST...
+
+GET {{ReservationDeSalle__Back_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
+
+
+GET {{ReservationDeSalle__Back_HostAddress}}/room
+Content-Type: application/json
+
+###
+
+
+GET {{ReservationDeSalle__Back_HostAddress}}/room/1
+Content-Type: application/json
+
+###
+
+POST {{ReservationDeSalle__Back_HostAddress}}/room/
+Content-Type: application/json
+
+{
+    "Name": "salle 1",
+    "Picture": "no",
+    "Adress": "adresse",
+    "Groupe": 2,
+    "Capacity": -6,
+    "Area": 95000000.25,
+    "isAccessible": true
+}
+
+###
+
+POST {{ReservationDeSalle__Back_HostAddress}}/room/
+Content-Type: application/json
+
+{
+    "Name": "salle 3",
+    "Slug": "salle-3",
+    "Picture": "no",
+    "Adress": "adresse",
+    "Groupe": 2,
+    "Capacity": 6,
+    "Area": 950.25,
+    "isAccessible": false
+}
