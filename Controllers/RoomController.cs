@@ -46,7 +46,8 @@ namespace RoomBookingApi.Controllers {
             oldRoom.Groupe = newRoom.Groupe;
             oldRoom.Capacity = newRoom.Capacity;
             oldRoom.Area = newRoom.Area;
-            oldRoom.isAccessible = newRoom.isAccessible;
+            oldRoom.IsAccessible = newRoom.IsAccessible;
+            oldRoom.Surface = newRoom.Surface;
 
             _context.SaveChanges();
             return Accepted(newRoom);

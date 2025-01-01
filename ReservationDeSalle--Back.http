@@ -32,7 +32,7 @@ Content-Type: application/json
     "Groupe": 2,
     "Capacity": -6,
     "Area": 95000000.25,
-    "isAccessible": true
+    "IsAccessible": true
 }
 
 ###
@@ -41,12 +41,13 @@ POST {{ReservationDeSalle__Back_HostAddress}}/room/
 Content-Type: application/json
 
 {
-    "Name": "salle 3",
-    "Slug": "salle-3",
+    "Name": "salle 1",
+    "Slug": "salle-1",
     "Picture": "no",
     "Adress": "adresse",
     "Groupe": 2,
     "Capacity": 6,
     "Area": 950.25,
-    "isAccessible": false
+    "IsAccessible": false,
+    "Surface": "interieur"
 }

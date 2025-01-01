@@ -24,8 +24,10 @@ namespace RoomBookingApi.Models{
         public int Capacity { get; set; }
 
         [Range(0, 1000)]
-        public decimal Area { get; set; }
+        public decimal Area{ get; set; }
 
-        public bool isAccessible { get; set; }
+        public bool IsAccessible { get; set; }
+
+        public string Surface { get; set; }
     }
 }
