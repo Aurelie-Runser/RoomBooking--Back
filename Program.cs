@@ -16,6 +16,15 @@ namespace RoomBookingApi{
             builder.Services.AddControllers();  // utilisation des controllers
             builder.Services.AddDbContext<RoomApiContext>(options => options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));  // utilisation de la bdd sqlite
 
+            // A changer lors de la mise en ligne pour restreindre l'accès
+            builder.Services.AddCors(options => {
+                options.AddPolicy("AllowAll",
+                    policy => policy
+                        .AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader());
+            });
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -23,6 +32,8 @@ namespace RoomBookingApi{
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            app.UseCors("AllowAll");
 
             app.UseHttpsRedirection();
             app.UseMiddleware<ExceptionMiddleware>(); // utilisation de Middleware pour traiter les erreurs

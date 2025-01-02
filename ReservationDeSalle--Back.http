@@ -41,11 +41,29 @@ POST {{ReservationDeSalle__Back_HostAddress}}/room/
 Content-Type: application/json
 
 {
-    "Name": "salle 5",
-    "Slug": "salle-5",
-    "Picture": "no",
+    "Name": "salle 6",
+    "Slug": "salle-6",
+    "Picture": "room6_small",
     "Adress": "adresse",
     "Groupe": 1,
+    "Capacity": 6,
+    "Area": 150.25,
+    "IsAccessible": true,
+    "Surface": "interieur et exterieur"
+}
+
+###
+
+PUT {{ReservationDeSalle__Back_HostAddress}}/room/
+Content-Type: application/json
+
+{
+    "Id": 2,
+    "Name": "salle 2",
+    "Slug": "salle-2",
+    "Picture": "room2_small",
+    "Adress": "adresse",
+    "Groupe": 2,
     "Capacity": 6,
     "Area": 150.25,
     "IsAccessible": true,
