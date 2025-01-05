@@ -37,17 +37,20 @@ namespace RoomBookingApi.Controllers {
         public ActionResult<Room> UpdateRoom(Room newRoom){
             var oldRoom = _context.Rooms.FirstOrDefault(room => room.Id == newRoom.Id);
 
-            if( oldRoom == null) return NotFound(newRoom.Id);
+            if (oldRoom == null) return NotFound(new { Message = $"Room with ID {newRoom.Id} not found" });
 
-            oldRoom.Name = newRoom.Name;
-            oldRoom.Slug = newRoom.Slug;
-            oldRoom.Picture = newRoom.Picture;
-            oldRoom.Adress = newRoom.Adress;
-            oldRoom.Groupe = newRoom.Groupe;
-            oldRoom.Capacity = newRoom.Capacity;
-            oldRoom.Area = newRoom.Area;
-            oldRoom.IsAccessible = newRoom.IsAccessible;
-            oldRoom.Surface = newRoom.Surface;
+            var properties = typeof(Room).GetProperties();
+
+            foreach (var property in properties){
+                if (property.Name == "Id" || !property.CanWrite) continue;
+
+                var oldValue = property.GetValue(oldRoom);
+                var newValue = property.GetValue(newRoom);
+
+                if (!object.Equals(newValue, oldValue)){
+                    property.SetValue(oldRoom, newValue);
+                }
+            }
 
             _context.SaveChanges();
             return Accepted(newRoom);
@@ -57,7 +60,7 @@ namespace RoomBookingApi.Controllers {
         public ActionResult<Room> DeleteRoom(int id){
             var room = _context.Rooms.FirstOrDefault(room => room.Id == id);
 
-            if( room == null) return NotFound(id);
+            if (room == null) return NotFound(new { Message = $"Room with ID {id} not found" });
 
             _context.Rooms.Remove(room);
             _context.SaveChanges();
