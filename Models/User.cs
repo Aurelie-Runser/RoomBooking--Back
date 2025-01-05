@@ -10,20 +10,20 @@ namespace RoomBookingApi.Models{
         [Required]
         public string Lastname { get; set; } = string.Empty;
 
-        public string Firstname { get; set; }
+        public string Firstname { get; set; } = string.Empty;
 
         [Required]
         [EmailAddress(ErrorMessage = "Invalid email format")]
-        public string Email { get; set; }
+        public string Email { get; set; } = string.Empty;
 
         [Required]
-        public string Password { get; set; }
+        public string Password { get; set; } = string.Empty;
 
-        public string Company { get; set; }
+        public string Company { get; set; } = string.Empty;
 
-        public string Job { get; set; }
+        public string Job { get; set; } = string.Empty;
 
         [Required]
-        public string Type { get; set; }    // admin, user...
+        public string Type { get; set; } = string.Empty;   // admin, user...
     }
 }

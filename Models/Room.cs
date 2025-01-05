@@ -12,12 +12,12 @@ namespace RoomBookingApi.Models{
         [StringLength(50)]
         public string Name { get; set; } = string.Empty;
 
-        public string Picture { get; set; }
+        public string Picture { get; set; } = string.Empty;
 
         [Required]
-        public string Adress { get; set; }
+        public string Adress { get; set; } = string.Empty;
 
-        public string AdressComplements { get; set; }
+        public string AdressComplements { get; set; } = string.Empty;
 
         public int Groupe { get; set; }
 
@@ -31,6 +31,6 @@ namespace RoomBookingApi.Models{
 
         public bool IsAccessible { get; set; }
 
-        public string Surface { get; set; } // intérieur et/ou exterieur
+        public string Surface { get; set; } = string.Empty; // intérieur et/ou exterieur
     }
 }
