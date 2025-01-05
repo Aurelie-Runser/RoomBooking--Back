@@ -13,7 +13,7 @@ namespace RoomBookingApi.Controllers {
 
         private readonly RoomApiContext _context;
 
-        public UserController(RoomApiContext context){
+            public UserController(RoomApiContext context){
             _context = context;
         }
 

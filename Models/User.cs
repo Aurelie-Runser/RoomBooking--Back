@@ -24,6 +24,11 @@ namespace RoomBookingApi.Models{
         public string Job { get; set; } = string.Empty;
 
         [Required]
-        public string Type { get; set; } = string.Empty;   // admin, user...
+        public UserRole Role { get; set; }
+    }
+
+    public enum UserRole {
+        admin,
+        user
     }
 }

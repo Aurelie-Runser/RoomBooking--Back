@@ -96,13 +96,28 @@ POST {{ReservationDeSalle__Back_HostAddress}}/user/
 Content-Type: application/json
 
 {
+    "Lastname": "Runser",
+    "Firstname": "Aurelie",
+    "Email": "aurelie.runser25@gmail.com",
+    "Password": "vmk",
+    "Company": "Ynov",
+    "Job": "student",
+    "Role": 0
+}
+
+###
+
+POST {{ReservationDeSalle__Back_HostAddress}}/user/
+Content-Type: application/json
+
+{
     "Lastname": "Joestar",
     "Firstname": "Joseph",
-    "Email": "lala@joestar.com",
+    "Email": "joseph@joestar.com",
     "Password": "IamTheBest",
     "Company": "SpeedWagon Company",
     "Job": "Directeur",
-    "Type": "user"
+    "Role": 1
 }
 
 ###
@@ -115,8 +130,8 @@ Content-Type: application/json
     "Lastname": "Joestar",
     "Firstname": "Joseph",
     "Email": "joseph@joestar.com",
-    "Password": "NINGERUDAIO",
+    "Password": "NINGERUNDAIO",
     "Company": "SpeedWagon Company",
     "Job": "Directeur",
-    "Type": "user"
+    "Role": 1
 }
