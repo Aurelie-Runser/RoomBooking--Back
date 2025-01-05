@@ -5,7 +5,7 @@ namespace RoomBookingApi.Models{
     public record User{
 
         [Required]
-        public int Id { get; private set; } 
+        public int Id { get; set; } 
 
         [Required]
         public string Lastname { get; set; } = string.Empty;

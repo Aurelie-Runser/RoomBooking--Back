@@ -6,7 +6,7 @@ namespace RoomBookingApi.Models{
 
         [Required]
         
-        public int Id { get; private set; } 
+        public int Id { get; set; } 
 
         [Required]
         [StringLength(50)]

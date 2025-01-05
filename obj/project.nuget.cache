@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "98nNBndXfn4=",
+  "dgSpecHash": "zoSbbGacVIE=",
   "success": true,
   "projectFilePath": "C:\\Users\\Aurélie\\Desktop\\Ynov\\WebFullStack\\ProjetGroupe\\Code\\ReservationDeSalle--Back\\ReservationDeSalle--Back.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\Aurélie\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512",
     "C:\\Users\\Aurélie\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\Aurélie\\.nuget\\packages\\microsoft.aspnetcore.openapi\\8.0.11\\microsoft.aspnetcore.openapi.8.0.11.nupkg.sha512",
     "C:\\Users\\Aurélie\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\6.0.0\\microsoft.bcl.asyncinterfaces.6.0.0.nupkg.sha512",

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using RoomBookingApi.Models;
 using RoomBookingApi.Data;
+using BCrypt.Net;
 
 namespace RoomBookingApi.Controllers {
 
@@ -33,6 +34,8 @@ namespace RoomBookingApi.Controllers {
                 return Conflict(new { Message = "An user with the same email already exists." });
             }
 
+            user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
+
             _context.Users.Add(user);
             _context.SaveChanges();
             return Created(nameof(AddUser), user);
@@ -53,6 +56,11 @@ namespace RoomBookingApi.Controllers {
                 var newValue = property.GetValue(newUser);
 
                 if (!object.Equals(newValue, oldValue)){
+
+                    if(property.Name == "Password"){
+                        newValue = BCrypt.Net.BCrypt.HashPassword(newValue.ToString());
+                    }
+                    
                     property.SetValue(oldUser, newValue);
                 }
             }

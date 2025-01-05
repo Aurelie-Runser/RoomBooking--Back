@@ -36,7 +36,7 @@ namespace RoomBookingApi.Controllers {
         [HttpPut]
         public ActionResult<Room> UpdateRoom(Room newRoom){
             var oldRoom = _context.Rooms.FirstOrDefault(room => room.Id == newRoom.Id);
-
+            
             if (oldRoom == null) return NotFound(new { Message = $"Room with ID {newRoom.Id} not found" });
 
             var properties = typeof(Room).GetProperties();

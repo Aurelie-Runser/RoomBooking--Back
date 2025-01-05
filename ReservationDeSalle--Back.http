@@ -74,14 +74,48 @@ Content-Type: application/json
 
 ###
 
+PUT {{ReservationDeSalle__Back_HostAddress}}/room/
+Content-Type: application/json
+
+{
+    "Id": 1,
+    "Name": "salle 1",
+    "Picture": "room1_small",
+    "Adress": "16 place des Grands Hommes",
+    "AdressComplements": "2ème étage, 1ère porte à gauche",
+    "Groupe": 1,
+    "Capacity": 16,
+    "Area": 150.25,
+    "IsAccessible": true,
+    "Surface": "interieur"
+}
+
+###
+
 POST {{ReservationDeSalle__Back_HostAddress}}/user/
 Content-Type: application/json
 
 {
     "Lastname": "Joestar",
     "Firstname": "Joseph",
-    "Email": "joseph@joestar.com",
+    "Email": "lala@joestar.com",
     "Password": "IamTheBest",
+    "Company": "SpeedWagon Company",
+    "Job": "Directeur",
+    "Type": "user"
+}
+
+###
+
+PUT {{ReservationDeSalle__Back_HostAddress}}/user/
+Content-Type: application/json
+
+{
+    "Id": 1,
+    "Lastname": "Joestar",
+    "Firstname": "Joseph",
+    "Email": "joseph@joestar.com",
+    "Password": "NINGERUDAIO",
     "Company": "SpeedWagon Company",
     "Job": "Directeur",
     "Type": "user"

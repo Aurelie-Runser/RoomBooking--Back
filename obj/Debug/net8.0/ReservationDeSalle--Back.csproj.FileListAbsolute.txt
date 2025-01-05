@@ -133,3 +133,4 @@ C:\Users\Aurélie\Desktop\Ynov\WebFullStack\ProjetGroupe\Code\ReservationDeSalle
 C:\Users\Aurélie\Desktop\Ynov\WebFullStack\ProjetGroupe\Code\ReservationDeSalle--Back\bin\Debug\net8.0\runtimes\win-x64\native\e_sqlite3.dll
 C:\Users\Aurélie\Desktop\Ynov\WebFullStack\ProjetGroupe\Code\ReservationDeSalle--Back\bin\Debug\net8.0\runtimes\win-x86\native\e_sqlite3.dll
 C:\Users\Aurélie\Desktop\Ynov\WebFullStack\ProjetGroupe\Code\ReservationDeSalle--Back\obj\Debug\net8.0\ReservationDeSalle--Back.sourcelink.json
+C:\Users\Aurélie\Desktop\Ynov\WebFullStack\ProjetGroupe\Code\ReservationDeSalle--Back\bin\Debug\net8.0\BCrypt.Net-Next.dll
