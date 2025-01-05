@@ -27,12 +27,32 @@ Content-Type: application/json
 
 {
     "Name": "salle 1",
-    "Picture": "no",
-    "Adress": "adresse",
+    "Picture": "room1_small",
+    "Adress": "2 rue de la Paix",
+    "AdressComplements": "",
     "Groupe": 2,
-    "Capacity": -6,
-    "Area": 95000000.25,
+    "Capacity": 6,
+    "Area": 20,
+    "Surface": "interieur et exterieur",
     "IsAccessible": true
+}
+
+
+###
+
+POST {{ReservationDeSalle__Back_HostAddress}}/room/
+Content-Type: application/json
+
+{
+    "Name": "salle 2",
+    "Picture": "room2_small",
+    "Adress": "19 rue de Lacroix",
+    "AdressComplements": "2ème porte à droite",
+    "Groupe": 3,
+    "Capacity": 10,
+    "Area": 50,
+    "IsAccessible": true,
+    "Surface": "interieur et exterieur"
 }
 
 ###
@@ -41,31 +61,28 @@ POST {{ReservationDeSalle__Back_HostAddress}}/room/
 Content-Type: application/json
 
 {
-    "Name": "salle 6",
-    "Slug": "salle-6",
-    "Picture": "room6_small",
-    "Adress": "adresse",
+    "Name": "salle 3",
+    "Picture": "room3_small",
+    "Adress": "16 place des Grands Hommes",
+    "AdressComplements": "2ème étage, 1ère porte à gauche",
     "Groupe": 1,
-    "Capacity": 6,
+    "Capacity": 16,
     "Area": 150.25,
     "IsAccessible": true,
-    "Surface": "interieur et exterieur"
+    "Surface": "interieur"
 }
 
 ###
 
-PUT {{ReservationDeSalle__Back_HostAddress}}/room/
+POST {{ReservationDeSalle__Back_HostAddress}}/user/
 Content-Type: application/json
 
 {
-    "Id": 2,
-    "Name": "salle 2",
-    "Slug": "salle-2",
-    "Picture": "room2_small",
-    "Adress": "adresse",
-    "Groupe": 2,
-    "Capacity": 6,
-    "Area": 150.25,
-    "IsAccessible": true,
-    "Surface": "interieur et exterieur"
+    "Lastname": "Joestar",
+    "Firstname": "Joseph",
+    "Email": "joseph@joestar.com",
+    "Password": "IamTheBest",
+    "Company": "SpeedWagon Company",
+    "Job": "Directeur",
+    "Type": "user"
 }
