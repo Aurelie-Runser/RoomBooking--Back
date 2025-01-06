@@ -1,8 +1,7 @@
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using RoomBookingApi.Models;
 using RoomBookingApi.Data;
-using BCrypt.Net;
+using RoomBookingApi.Models;
+using RoomBookingApi.Mappers;
 
 namespace RoomBookingApi.Controllers {
 
@@ -18,7 +17,7 @@ namespace RoomBookingApi.Controllers {
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<User>> GetUsers() {
+        public ActionResult<IEnumerable<UserBase>> GetUsers() {
             return Ok(_context.Users);
         }
 
@@ -70,7 +69,7 @@ namespace RoomBookingApi.Controllers {
         }
 
         [HttpDelete]
-        public ActionResult<User> DeleteUser(int id){
+        public ActionResult<UserBase> DeleteUser(int id){
             var user = _context.Users.FirstOrDefault(user => user.Id == id);
 
             if (user == null) return NotFound(new { Message = $"User with ID {id} not found" });
@@ -78,6 +77,33 @@ namespace RoomBookingApi.Controllers {
             _context.Users.Remove(user);
             _context.SaveChanges();
             return Accepted();
+        }
+
+        [HttpPost("login")]
+        public ActionResult<User> Login([FromBody] LoginRequest loginRequest) {
+
+            Console.WriteLine("coucou", loginRequest);
+            
+            var user = _context.Users.FirstOrDefault(u => u.Email == loginRequest.Email);
+
+            if (user == null) {
+                return Unauthorized(new { Message = "Aucun compte avec cet email n'existe" });
+            }
+
+            bool isPasswordValid = BCrypt.Net.BCrypt.Verify(loginRequest.Password, user.Password);
+
+            if (!isPasswordValid) {
+                return Unauthorized(new { Message = "Ce mot de passe est mauvais pour cet identifiant." });
+            }
+
+            var userOdt = user.ToDto();
+
+            return Ok(userOdt);
+        }
+
+        public class LoginRequest {
+            public string Email { get; set; }
+            public string Password { get; set; }
         }
     }
 }
