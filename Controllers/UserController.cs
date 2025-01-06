@@ -40,6 +40,28 @@ namespace RoomBookingApi.Controllers {
             return Created(nameof(AddUser), user);
         }
 
+        [HttpPost("login")]
+        public ActionResult<User> Login([FromBody] LoginRequest loginRequest) {
+
+            Console.WriteLine("coucou", loginRequest);
+            
+            var user = _context.Users.FirstOrDefault(u => u.Email == loginRequest.Email);
+
+            if (user == null) {
+                return Unauthorized(new { Message = "Aucun compte avec cet email n'existe" });
+            }
+
+            bool isPasswordValid = BCrypt.Net.BCrypt.Verify(loginRequest.Password, user.Password);
+
+            if (!isPasswordValid) {
+                return Unauthorized(new { Message = "Ce mot de passe est mauvais pour cet identifiant." });
+            }
+
+            var userOdt = user.ToDto();
+
+            return Ok(userOdt);
+        }
+
         [HttpPut]
         public ActionResult<User> UpdateUser(User newUser){
             var oldUser = _context.Users.FirstOrDefault(user => user.Id == newUser.Id);
@@ -77,33 +99,6 @@ namespace RoomBookingApi.Controllers {
             _context.Users.Remove(user);
             _context.SaveChanges();
             return Accepted();
-        }
-
-        [HttpPost("login")]
-        public ActionResult<User> Login([FromBody] LoginRequest loginRequest) {
-
-            Console.WriteLine("coucou", loginRequest);
-            
-            var user = _context.Users.FirstOrDefault(u => u.Email == loginRequest.Email);
-
-            if (user == null) {
-                return Unauthorized(new { Message = "Aucun compte avec cet email n'existe" });
-            }
-
-            bool isPasswordValid = BCrypt.Net.BCrypt.Verify(loginRequest.Password, user.Password);
-
-            if (!isPasswordValid) {
-                return Unauthorized(new { Message = "Ce mot de passe est mauvais pour cet identifiant." });
-            }
-
-            var userOdt = user.ToDto();
-
-            return Ok(userOdt);
-        }
-
-        public class LoginRequest {
-            public string Email { get; set; }
-            public string Password { get; set; }
         }
     }
 }
