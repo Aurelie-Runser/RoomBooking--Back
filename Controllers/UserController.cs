@@ -30,7 +30,7 @@ namespace RoomBookingApi.Controllers {
         public ActionResult<User> AddUser(User user){
             
             if (_context.Users.Any(u => u.Email == user.Email)){
-                return Conflict(new { Message = "An user with the same email already exists." });
+                return Conflict(new { Message = "Un utilisateur avec le même email existe déjà." });
             }
 
             user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
@@ -44,7 +44,7 @@ namespace RoomBookingApi.Controllers {
         public ActionResult<User> UpdateUser(User newUser){
             var oldUser = _context.Users.FirstOrDefault(user => user.Id == newUser.Id);
 
-            if (oldUser == null) return NotFound(new { Message = $"User with ID {newUser.Id} not found" });
+            if (oldUser == null) return NotFound(new { Message = $"Aucun utilisateur avec l'ID {newUser.Id} n'a été trouvé." });
 
             var properties = typeof(User).GetProperties();
 
@@ -72,7 +72,7 @@ namespace RoomBookingApi.Controllers {
         public ActionResult<UserBase> DeleteUser(int id){
             var user = _context.Users.FirstOrDefault(user => user.Id == id);
 
-            if (user == null) return NotFound(new { Message = $"User with ID {id} not found" });
+            if (user == null) return NotFound(new { Message = $"Aucun utilisateur avec l'ID {id} n'a été trouvé." });
 
             _context.Users.Remove(user);
             _context.SaveChanges();
