@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using RoomBookingApi.Data;
 using RoomBookingApi.Models;
+using RoomBookingApi.Services;
 using RoomBookingApi.Mappers;
 
 namespace RoomBookingApi.Controllers {
@@ -11,9 +12,11 @@ namespace RoomBookingApi.Controllers {
     public class UserController : ControllerBase {
 
         private readonly RoomApiContext _context;
+        private readonly JwtTokenService _jwtTokenService;
 
-            public UserController(RoomApiContext context){
+        public UserController(RoomApiContext context, JwtTokenService jwtTokenService){
             _context = context;
+            _jwtTokenService = jwtTokenService;
         }
 
         [HttpGet]
@@ -42,8 +45,6 @@ namespace RoomBookingApi.Controllers {
 
         [HttpPost("login")]
         public ActionResult<User> Login([FromBody] LoginRequest loginRequest) {
-
-            Console.WriteLine("coucou", loginRequest);
             
             var user = _context.Users.FirstOrDefault(u => u.Email == loginRequest.Email);
 
@@ -57,9 +58,9 @@ namespace RoomBookingApi.Controllers {
                 return Unauthorized(new { Message = "Ce mot de passe est mauvais pour cet identifiant." });
             }
 
-            var userOdt = user.ToDto();
+            var token = _jwtTokenService.GenerateToken(user.Id, user.Email, user.Role.ToString());
 
-            return Ok(userOdt);
+            return Ok(new { Token = token });
         }
 
         [HttpPut]

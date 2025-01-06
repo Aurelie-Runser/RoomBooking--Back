@@ -126,12 +126,12 @@ PUT {{ReservationDeSalle__Back_HostAddress}}/user/
 Content-Type: application/json
 
 {
-    "Id": 1,
-    "Lastname": "Joestar",
-    "Firstname": "Joseph",
-    "Email": "joseph@joestar.com",
-    "Password": "NINGERUNDAIO",
-    "Company": "SpeedWagon Company",
-    "Job": "Directeur",
-    "Role": 1
+    "Id": 2,
+    "Lastname": "Runser",
+    "Firstname": "Aurelie",
+    "Email": "la@la.com",
+    "Password": "vmk",
+    "Company": "Ynov",
+    "Job": "student",
+    "Role": 0
 }
