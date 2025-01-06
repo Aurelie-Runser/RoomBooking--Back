@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace RoomBookingApi.Models{
 
-    public record User{
+    public record UserBase{
 
         [Required]
         public int Id { get; set; } 
@@ -16,9 +16,6 @@ namespace RoomBookingApi.Models{
         [EmailAddress(ErrorMessage = "Invalid email format")]
         public string Email { get; set; } = string.Empty;
 
-        [Required]
-        public string Password { get; set; } = string.Empty;
-
         public string Company { get; set; } = string.Empty;
 
         public string Job { get; set; } = string.Empty;
@@ -27,6 +24,14 @@ namespace RoomBookingApi.Models{
         public UserRole Role { get; set; }
     }
 
+    public record User : UserBase
+    {
+        public string Password { get; set; } = string.Empty;
+    }
+
+    public record UserDto : UserBase{
+    }
+    
     public enum UserRole {
         admin,
         user
