@@ -29,6 +29,23 @@ namespace RoomBookingApi.Controllers {
             return Ok(_context.Users.FirstOrDefault(user => user.Id == id));
         }
 
+        [HttpGet("profil/{token}")]
+        public ActionResult<User> getProfil(string token){
+            var userId = _jwtTokenService.GetUserIdFromToken(token);
+
+            if (userId == null) {
+                return BadRequest(new { Message = "Token invalide ou utilisateur introuvable." });
+            }
+
+            var user = _context.Users.FirstOrDefault(user => user.Id == userId);
+
+            if (user == null) {
+                return NotFound(new { Message = $"Aucun utilisateur avec l'ID {userId} n'a été trouvé." });
+            }
+
+            return Ok(user);
+        }
+
         [HttpPost]
         public ActionResult<User> AddUser(User user){
             
