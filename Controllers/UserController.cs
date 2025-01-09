@@ -95,7 +95,7 @@ namespace RoomBookingApi.Controllers {
             var properties = typeof(User).GetProperties();
 
             foreach (var property in properties){
-                if (property.Name == "Id" || !property.CanWrite) continue;
+                if (property.Name == "Id" || property.Name == "Role" || property.Name == "Email") continue;
 
                 var oldValue = property.GetValue(oldUser);
                 var newValue = property.GetValue(newUser);
@@ -111,7 +111,7 @@ namespace RoomBookingApi.Controllers {
             }
 
             _context.SaveChanges();
-            return Accepted(newUser);
+            return Ok(new { Message = "Vaux modifications ont été enregistré avec succès"});
         }
 
         [HttpDelete("{Id}")]
