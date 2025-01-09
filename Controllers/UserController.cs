@@ -43,7 +43,9 @@ namespace RoomBookingApi.Controllers {
                 return NotFound(new { Message = $"Aucun utilisateur avec l'ID {userId} n'a été trouvé." });
             }
 
-            return Ok(user);
+            var userDto = UserExtensions.ToDto(user);
+
+            return Ok(userDto);
         }
 
         [HttpPost]
