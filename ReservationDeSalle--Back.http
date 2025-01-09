@@ -5,9 +5,6 @@
 # Tu peux tester les routes suivante juste en cliquant sur le texte "Send request"
 # présente au dessus des GET/POST...
 
-GET {{ReservationDeSalle__Back_HostAddress}}/weatherforecast/
-Accept: application/json
-
 ###
 
 
@@ -92,6 +89,12 @@ Content-Type: application/json
 
 ###
 
+
+GET {{ReservationDeSalle__Back_HostAddress}}/user
+Content-Type: application/json
+
+###
+
 POST {{ReservationDeSalle__Back_HostAddress}}/user/
 Content-Type: application/json
 
@@ -135,3 +138,8 @@ Content-Type: application/json
     "Job": "student",
     "Role": 0
 }
+
+###
+
+DELETE {{ReservationDeSalle__Back_HostAddress}}/user/4
+Content-Type: application/json

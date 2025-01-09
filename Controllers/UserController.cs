@@ -49,17 +49,21 @@ namespace RoomBookingApi.Controllers {
         }
 
         [HttpPost]
-        public ActionResult<User> AddUser(User user){
+        public ActionResult<User> Register(User user){
             
             if (_context.Users.Any(u => u.Email == user.Email)){
-                return Conflict(new { Message = "Un utilisateur avec le même email existe déjà." });
+                return Conflict(new { Message = "Un utilisateur avec le même email existe déjà. Connectez-vous ou essayer avec une autre adresse mail" });
             }
 
+            user.Role = 0;
             user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
 
             _context.Users.Add(user);
             _context.SaveChanges();
-            return Created(nameof(AddUser), user);
+
+            var token = _jwtTokenService.GenerateToken(user.Id, user.Email, user.Role.ToString());
+
+            return Ok(new { Token = token, Message = "Votre compte à bien été créé."});
         }
 
         [HttpPost("login")]
@@ -110,8 +114,9 @@ namespace RoomBookingApi.Controllers {
             return Accepted(newUser);
         }
 
-        [HttpDelete]
+        [HttpDelete("{Id}")]
         public ActionResult<UserBase> DeleteUser(int id){
+            Console.WriteLine("ID : ", id);
             var user = _context.Users.FirstOrDefault(user => user.Id == id);
 
             if (user == null) return NotFound(new { Message = $"Aucun utilisateur avec l'ID {id} n'a été trouvé." });
