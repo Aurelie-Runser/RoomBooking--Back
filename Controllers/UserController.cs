@@ -116,14 +116,13 @@ namespace RoomBookingApi.Controllers {
 
         [HttpDelete("{Id}")]
         public ActionResult<UserBase> DeleteUser(int id){
-            Console.WriteLine("ID : ", id);
             var user = _context.Users.FirstOrDefault(user => user.Id == id);
 
             if (user == null) return NotFound(new { Message = $"Aucun utilisateur avec l'ID {id} n'a été trouvé." });
 
             _context.Users.Remove(user);
             _context.SaveChanges();
-            return Accepted();
+            return Accepted(new { Message = "Votre compte à été supprimer avec succès" });
         }
     }
 }

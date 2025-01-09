@@ -141,5 +141,5 @@ Content-Type: application/json
 
 ###
 
-DELETE {{ReservationDeSalle__Back_HostAddress}}/user/4
+DELETE {{ReservationDeSalle__Back_HostAddress}}/user/2
 Content-Type: application/json
