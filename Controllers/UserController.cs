@@ -3,6 +3,7 @@ using RoomBookingApi.Data;
 using RoomBookingApi.Models;
 using RoomBookingApi.Services;
 using RoomBookingApi.Mappers;
+using RoomBookingApi.Validations;
 
 namespace RoomBookingApi.Controllers {
 
@@ -55,7 +56,6 @@ namespace RoomBookingApi.Controllers {
                 return Conflict(new { Message = "Un utilisateur avec le même email existe déjà. Connectez-vous ou essayer avec une autre adresse mail" });
             }
 
-            user.Role = 0;
             user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
 
             _context.Users.Add(user);

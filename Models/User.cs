@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using RoomBookingApi.Validations;
 
 namespace RoomBookingApi.Models{
 
@@ -21,7 +22,8 @@ namespace RoomBookingApi.Models{
         public string Job { get; set; } = string.Empty;
 
         [Required]
-        public UserRole Role { get; set; }
+        [RoleValidation]
+        public string Role { get; set; } = "user";
     }
 
     public record User : UserBase
@@ -30,10 +32,5 @@ namespace RoomBookingApi.Models{
     }
 
     public record UserDto : UserBase{
-    }
-    
-    public enum UserRole {
-        admin,
-        user
     }
 }
