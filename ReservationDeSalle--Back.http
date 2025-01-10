@@ -1,71 +1,138 @@
-@ReservationDeSalle__Back_HostAddress = http://localhost:5010
-
-
-# Avec l'extention "REST Client"
-# Tu peux tester les routes suivante juste en cliquant sur le texte "Send request"
-# présente au dessus des GET/POST...
-
-GET {{ReservationDeSalle__Back_HostAddress}}/weatherforecast/
-Accept: application/json
+@RoomBooking_Back__HostAddress = http://localhost:5010
 
 ###
 
-
-GET {{ReservationDeSalle__Back_HostAddress}}/room
+GET {{RoomBooking_Back__HostAddress}}/room
 Content-Type: application/json
 
 ###
 
-
-GET {{ReservationDeSalle__Back_HostAddress}}/room/1
+GET {{RoomBooking_Back__HostAddress}}/room/1
 Content-Type: application/json
 
 ###
 
-POST {{ReservationDeSalle__Back_HostAddress}}/room/
+POST {{RoomBooking_Back__HostAddress}}/room/
 Content-Type: application/json
 
 {
     "Name": "salle 1",
-    "Picture": "no",
-    "Adress": "adresse",
-    "Groupe": 2,
-    "Capacity": -6,
-    "Area": 95000000.25,
+    "Picture": "room1_small",
+    "Adress": "2 rue de la Paix",
+    "AdressComplements": "",
+    "Groupe": "Petite Réunion",
+    "Capacity": 6,
+    "Area": 20,
+    "Surface": "interieur et exterieur",
     "IsAccessible": true
 }
 
+
 ###
 
-POST {{ReservationDeSalle__Back_HostAddress}}/room/
+POST {{RoomBooking_Back__HostAddress}}/room/
 Content-Type: application/json
 
 {
-    "Name": "salle 6",
-    "Slug": "salle-6",
-    "Picture": "room6_small",
-    "Adress": "adresse",
-    "Groupe": 1,
-    "Capacity": 6,
-    "Area": 150.25,
+    "Name": "salle 2",
+    "Picture": "room2_small",
+    "Adress": "19 rue de Lacroix",
+    "AdressComplements": "2ème porte à droite",
+    "Groupe": "Grande Réunion",
+    "Capacity": 10,
+    "Area": 50,
     "IsAccessible": true,
     "Surface": "interieur et exterieur"
 }
 
 ###
 
-PUT {{ReservationDeSalle__Back_HostAddress}}/room/
+POST {{RoomBooking_Back__HostAddress}}/room/
+Content-Type: application/json
+
+{
+    "Name": "salle 3",
+    "Picture": "room3_small",
+    "Adress": "16 place des Grands Hommes",
+    "AdressComplements": "2ème étage, 1ère porte à gauche",
+    "Groupe": "Fête",
+    "Capacity": 16,
+    "Area": 150.25,
+    "IsAccessible": true,
+    "Surface": "interieur"
+}
+
+###
+
+PUT {{RoomBooking_Back__HostAddress}}/room/
+Content-Type: application/json
+
+{
+    "Id": 1,
+    "Name": "salle 1",
+    "Picture": "room1_small",
+    "Adress": "16 place des Grands Hommes",
+    "AdressComplements": "2ème étage, 1ère porte à gauche",
+    "Groupe": 1,
+    "Capacity": 16,
+    "Area": 150.25,
+    "IsAccessible": true,
+    "Surface": "interieur"
+}
+
+###
+
+
+GET {{RoomBooking_Back__HostAddress}}/user
+Content-Type: application/json
+
+###
+
+POST {{RoomBooking_Back__HostAddress}}/user/
+Content-Type: application/json
+
+{
+    "Lastname": "Runser",
+    "Firstname": "Aurelie",
+    "Email": "aurelie.runser25@gmail.com",
+    "Password": "vmk",
+    "Company": "Ynov",
+    "Job": "student",
+    "Role": 0
+}
+
+###
+
+POST {{RoomBooking_Back__HostAddress}}/user/
+Content-Type: application/json
+
+{
+    "Lastname": "Joestar",
+    "Firstname": "Joseph",
+    "Email": "joseph@joestar.com",
+    "Password": "IamTheBest",
+    "Company": "SpeedWagon Company",
+    "Job": "Directeur",
+    "Role": 1
+}
+
+###
+
+PUT {{RoomBooking_Back__HostAddress}}/user/
 Content-Type: application/json
 
 {
     "Id": 2,
-    "Name": "salle 2",
-    "Slug": "salle-2",
-    "Picture": "room2_small",
-    "Adress": "adresse",
-    "Groupe": 2,
-    "Capacity": 6,
-    "Area": 150.25,
-    "IsAccessible": true,
-    "Surface": "interieur et exterieur"
+    "Lastname": "Runser",
+    "Firstname": "Aurelie",
+    "Email": "la@la.com",
+    "Password": "vmk",
+    "Company": "Ynov",
+    "Job": "student",
+    "Role": 0
 }
+
+###
+
+DELETE {{RoomBooking_Back__HostAddress}}/user/2
+Content-Type: application/json

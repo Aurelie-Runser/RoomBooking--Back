@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using RoomBookingApi.Data;
 using RoomBookingApi.Middlewares;
-using RoomBookingApi.Models;
+using RoomBookingApi.Services;
 
 namespace RoomBookingApi{
     
@@ -15,6 +15,10 @@ namespace RoomBookingApi{
             builder.Services.AddSwaggerGen();
             builder.Services.AddControllers();  // utilisation des controllers
             builder.Services.AddDbContext<RoomApiContext>(options => options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));  // utilisation de la bdd sqlite
+
+            var secretKey = builder.Configuration["Jwt:SecretKey"];
+            var tokenExpiryDuration = int.Parse(builder.Configuration["Jwt:ExpiryDurationInHours"]);
+            builder.Services.AddSingleton(new JwtTokenService(secretKey, tokenExpiryDuration));
 
             // A changer lors de la mise en ligne pour restreindre l'accès
             builder.Services.AddCors(options => {
