@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using RoomBookingApi.Validations;
 
 namespace RoomBookingApi.Models{
 
@@ -19,7 +20,8 @@ namespace RoomBookingApi.Models{
 
         public string AdressComplements { get; set; } = string.Empty;
 
-        public int Groupe { get; set; }
+        [GroupeValidation]
+        public string Groupe { get; set; } = "";
 
         [Required]
         [Range(0, 10000)]
