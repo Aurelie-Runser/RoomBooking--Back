@@ -13,7 +13,7 @@ namespace RoomBookingApi.Services{
             _expiryDurationInHours = expiryDurationInHours;
         }
 
-        public string GenerateToken(int userId, string email, string role) {
+        public string GenerateToken(int userId, string email) {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_secretKey);
 
@@ -21,7 +21,6 @@ namespace RoomBookingApi.Services{
                 Subject = new ClaimsIdentity(new[]{
                     new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
                     new Claim(ClaimTypes.Email, email),
-                    new Claim(ClaimTypes.Role, role)
                 }),
                 Expires = DateTime.UtcNow.AddHours(_expiryDurationInHours),
                 SigningCredentials = new SigningCredentials(
@@ -69,18 +68,6 @@ namespace RoomBookingApi.Services{
                 if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int userId)) {
                     return userId;
                 }
-            }
-
-            return null;
-        }
-
-        public string GetUserRoleFromToken(string token) {
-            var principal = ValidateToken(token);
-
-            if (principal != null) {
-                var userRoleClaim = principal.FindFirst(ClaimTypes.Role);
-
-                return userRoleClaim.Value;
             }
 
             return null;
