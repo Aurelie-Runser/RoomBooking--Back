@@ -95,7 +95,8 @@ namespace RoomBookingApi.Controllers {
             var properties = typeof(User).GetProperties();
 
             foreach (var property in properties){
-                if (property.Name == "Id" || property.Name == "Role" || property.Name == "Email") continue;
+                // if (property.Name == "Id" || property.Name == "Role" || property.Name == "Email") continue;
+                if (property.Name == "Id" || property.Name == "Email") continue;
 
                 var oldValue = property.GetValue(oldUser);
                 var newValue = property.GetValue(newUser);
@@ -103,6 +104,9 @@ namespace RoomBookingApi.Controllers {
                 if (!object.Equals(newValue, oldValue)){
 
                     if(property.Name == "Password"){
+
+                        if (string.IsNullOrWhiteSpace(newValue?.ToString())) continue; 
+                        
                         newValue = BCrypt.Net.BCrypt.HashPassword(newValue.ToString());
                     }
                     
@@ -111,7 +115,7 @@ namespace RoomBookingApi.Controllers {
             }
 
             _context.SaveChanges();
-            return Ok(new { Message = "Vaux modifications ont été enregistré avec succès"});
+            return Ok(new { Message = "Vaux modifications ont été enregistrées avec succès"});
         }
 
         [HttpDelete("{Id}")]
@@ -122,7 +126,7 @@ namespace RoomBookingApi.Controllers {
 
             _context.Users.Remove(user);
             _context.SaveChanges();
-            return Accepted(new { Message = "Votre compte à été supprimer avec succès" });
+            return Accepted(new { Message = "Votre compte à été supprimé avec succès" });
         }
     }
 }
