@@ -53,7 +53,7 @@ namespace RoomBookingApi.Controllers {
             }
 
             _context.SaveChanges();
-            return Accepted(newRoom);
+            return Ok(new { Message = "Vaux modifications ont été enregistrées avec succès"});
         }
 
         [HttpDelete]
