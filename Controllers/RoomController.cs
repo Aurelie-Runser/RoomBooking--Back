@@ -1,7 +1,8 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using RoomBookingApi.Models;
 using RoomBookingApi.Data;
+using RoomBookingApi.Models;
+using RoomBookingApi.Services;
 using RoomBookingApi.Validations;
 
 namespace RoomBookingApi.Controllers {
@@ -12,9 +13,11 @@ namespace RoomBookingApi.Controllers {
     public class RoomController : ControllerBase {
 
         private readonly RoomApiContext _context;
+        private readonly JwtTokenService _jwtTokenService;
 
-        public RoomController(RoomApiContext context){
+        public RoomController(RoomApiContext context, JwtTokenService jwtTokenService){
             _context = context;
+            _jwtTokenService = jwtTokenService;
         }
 
         [HttpGet]
@@ -35,7 +38,21 @@ namespace RoomBookingApi.Controllers {
         }
 
         [HttpPut]
-        public ActionResult UpdateRoom(Room newRoom){
+        public ActionResult UpdateRoom([FromBody] RoomUpdate RoomUpdate){
+
+            var newRoom = RoomUpdate.newRoom;
+            var token = RoomUpdate.token;
+
+            var userRole = _jwtTokenService.GetUserRoleFromToken(token);
+
+            if (userRole == null) {
+                return BadRequest(new { Message = "Token invalide ou utilisateur introuvable." });
+            }
+
+            if (userRole != "admin") {
+                return Unauthorized(new { Message = "Vous n'avez pas le droit pour modifier une salle." });
+            }
+            
             var oldRoom = _context.Rooms.FirstOrDefault(room => room.Id == newRoom.Id);
             
             if (oldRoom == null) return NotFound(new { Message = $"Room with ID {newRoom.Id} not found" });

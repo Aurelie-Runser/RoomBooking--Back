@@ -73,5 +73,17 @@ namespace RoomBookingApi.Services{
 
             return null;
         }
+
+        public string GetUserRoleFromToken(string token) {
+            var principal = ValidateToken(token);
+
+            if (principal != null) {
+                var userRoleClaim = principal.FindFirst(ClaimTypes.Role);
+
+                return userRoleClaim.Value;
+            }
+
+            return null;
+        }
     }
 }

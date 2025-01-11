@@ -35,4 +35,14 @@ namespace RoomBookingApi.Models{
 
         public string Surface { get; set; } = string.Empty; // intérieur et/ou exterieur
     }
+
+    public record RoomUpdate{
+
+        [Required]
+        public Room newRoom { get; set; } 
+
+        [Required]
+        public string token { get; set; } 
+
+    }
 }
