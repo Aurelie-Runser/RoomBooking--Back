@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using RoomBookingApi.Models;
 using RoomBookingApi.Data;
+using RoomBookingApi.Validations;
 
 namespace RoomBookingApi.Controllers {
 
@@ -34,7 +35,7 @@ namespace RoomBookingApi.Controllers {
         }
 
         [HttpPut]
-        public ActionResult<Room> UpdateRoom(Room newRoom){
+        public ActionResult UpdateRoom(Room newRoom){
             var oldRoom = _context.Rooms.FirstOrDefault(room => room.Id == newRoom.Id);
             
             if (oldRoom == null) return NotFound(new { Message = $"Room with ID {newRoom.Id} not found" });
@@ -65,6 +66,12 @@ namespace RoomBookingApi.Controllers {
             _context.Rooms.Remove(room);
             _context.SaveChanges();
             return Accepted();
+        }
+
+
+        [HttpGet("groupe")]
+        public ActionResult<IEnumerable<string>> GetRoomGroupe(){
+            return Ok(Groupes.AllowedGroupes);
         }
     }
 }
