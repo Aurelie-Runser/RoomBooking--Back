@@ -61,9 +61,9 @@ namespace RoomBookingApi.Controllers {
             _context.Users.Add(user);
             _context.SaveChanges();
 
-            var token = _jwtTokenService.GenerateToken(user.Id, user.Email, user.Role.ToString());
+            var token = _jwtTokenService.GenerateToken(user.Id, user.Email);
 
-            return Ok(new { Token = token, Message = "Votre compte à bien été créé."});
+            return Ok(new { Token = token, IsAdmin = false, Message = "Votre compte à bien été créé."});
         }
 
         [HttpPost("login")]
@@ -81,9 +81,10 @@ namespace RoomBookingApi.Controllers {
                 return Unauthorized(new { Message = "Ce mot de passe est mauvais pour cet identifiant." });
             }
 
-            var token = _jwtTokenService.GenerateToken(user.Id, user.Email, user.Role.ToString());
+            var token = _jwtTokenService.GenerateToken(user.Id, user.Email);
+            var isUserAdmin = user.IsAdmin();
 
-            return Ok(new { Token = token });
+            return Ok(new { Token = token, IsAdmin = isUserAdmin });
         }
 
         [HttpPut]

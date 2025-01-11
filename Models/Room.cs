@@ -45,4 +45,14 @@ namespace RoomBookingApi.Models{
         public string token { get; set; } 
 
     }
+
+    public record RoomDelete{
+
+        [Required]
+        public int roomId { get; set; } 
+
+        [Required]
+        public string token { get; set; } 
+
+    }
 }

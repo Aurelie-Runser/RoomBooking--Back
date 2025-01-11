@@ -24,10 +24,13 @@ namespace RoomBookingApi.Models{
         [Required]
         [RoleValidation]
         public string Role { get; set; } = "user";
+
+        public bool IsAdmin() {
+            return string.Equals(Role, "admin", StringComparison.OrdinalIgnoreCase);
+        }
     }
 
-    public record User : UserBase
-    {
+    public record User : UserBase {
         public string Password { get; set; } = string.Empty;
     }
 

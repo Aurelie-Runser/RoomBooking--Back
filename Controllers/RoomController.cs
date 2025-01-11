@@ -43,13 +43,15 @@ namespace RoomBookingApi.Controllers {
             var newRoom = RoomUpdate.newRoom;
             var token = RoomUpdate.token;
 
-            var userRole = _jwtTokenService.GetUserRoleFromToken(token);
-
-            if (userRole == null) {
-                return BadRequest(new { Message = "Token invalide ou utilisateur introuvable." });
+            var userId = _jwtTokenService.GetUserIdFromToken(token);
+            
+            var user = _context.Users.FirstOrDefault(u => u.Id == userId);
+            if (user == null) {
+                return NotFound(new { Message = "Token invalide ou utilisateur introuvable." });
             }
 
-            if (userRole != "admin") {
+            var isUserAdmin = user.IsAdmin();
+            if (!isUserAdmin) {
                 return Unauthorized(new { Message = "Vous n'avez pas le droit pour modifier une salle." });
             }
             
@@ -75,14 +77,27 @@ namespace RoomBookingApi.Controllers {
         }
 
         [HttpDelete]
-        public ActionResult<Room> DeleteRoom(int id){
-            var room = _context.Rooms.FirstOrDefault(room => room.Id == id);
+        public ActionResult DeleteRoom([FromQuery] int roomId, [FromQuery] string token){
 
-            if (room == null) return NotFound(new { Message = $"Room with ID {id} not found" });
+            var userId = _jwtTokenService.GetUserIdFromToken(token);
+            
+            var user = _context.Users.FirstOrDefault(u => u.Id == userId);
+            if (user == null) {
+                return NotFound(new { Message = "Token invalide ou utilisateur introuvable." });
+            }
+
+            var isUserAdmin = user.IsAdmin();
+            if (!isUserAdmin) {
+                return Unauthorized(new { Message = "Vous n'avez pas le droit pour supprimer une salle." });
+            }
+
+            var room = _context.Rooms.FirstOrDefault(room => room.Id == roomId);
+
+            if (room == null) return NotFound(new { Message = $"Room with ID {roomId} not found" });
 
             _context.Rooms.Remove(room);
             _context.SaveChanges();
-            return Accepted();
+            return Accepted(new { Message = "La salle à été supprimée avec succès" });
         }
 
 
