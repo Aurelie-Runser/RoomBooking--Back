@@ -31,10 +31,24 @@ namespace RoomBookingApi.Controllers {
         }
 
         [HttpPost]
-        public ActionResult<Room> AddRoom(Room room){
-            _context.Rooms.Add(room);
+        public ActionResult<object> AddRoom([FromBody] RoomUpdate RoomUpdate){
+            var newRoom = RoomUpdate.newRoom;
+            var token = RoomUpdate.token;
+
+            var userId = _jwtTokenService.GetUserIdFromToken(token);
+            
+            var user = _context.Users.FirstOrDefault(u => u.Id == userId);
+            if (user == null) {
+                return NotFound(new { Message = "Token invalide ou utilisateur introuvable." });
+            }
+
+            var isUserAdmin = user.IsAdmin();
+            if (!isUserAdmin) {
+                return Unauthorized(new { Message = "Vous n'avez pas le droit pour ajouter une salle." });
+            }
+            _context.Rooms.Add(newRoom);
             _context.SaveChanges();
-            return Created(nameof(AddRoom), room);
+            return Created(nameof(AddRoom), new { Id = newRoom.Id });
         }
 
         [HttpPut]
