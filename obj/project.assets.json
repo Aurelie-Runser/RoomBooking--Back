@@ -3843,9 +3843,9 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Aurélie\\Desktop\\Ynov\\WebFullStack\\ProjetGroupe\\Code\\ReservationDeSalle--Back\\ReservationDeSalle--Back.csproj",
-      "projectName": "ReservationDeSalle--Back",
-      "projectPath": "C:\\Users\\Aurélie\\Desktop\\Ynov\\WebFullStack\\ProjetGroupe\\Code\\ReservationDeSalle--Back\\ReservationDeSalle--Back.csproj",
+      "projectUniqueName": "C:\\Users\\Aurélie\\Desktop\\Ynov\\WebFullStack\\ProjetGroupe\\Code\\ReservationDeSalle--Back\\RoomBookingApi.csproj",
+      "projectName": "RoomBookingApi",
+      "projectPath": "C:\\Users\\Aurélie\\Desktop\\Ynov\\WebFullStack\\ProjetGroupe\\Code\\ReservationDeSalle--Back\\RoomBookingApi.csproj",
       "packagesPath": "C:\\Users\\Aurélie\\.nuget\\packages\\",
       "outputPath": "C:\\Users\\Aurélie\\Desktop\\Ynov\\WebFullStack\\ProjetGroupe\\Code\\ReservationDeSalle--Back\\obj\\",
       "projectStyle": "PackageReference",
