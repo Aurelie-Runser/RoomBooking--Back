@@ -15,31 +15,37 @@ namespace RoomBookingApi.Controllers
     {
 
         private readonly RoomApiContext _context;
+        private readonly ILogger<RoomController> _logger;
         private readonly JwtTokenService _jwtTokenService;
 
-        public RoomController(RoomApiContext context, JwtTokenService jwtTokenService)
+        public RoomController(RoomApiContext context, ILogger<RoomController> logger, JwtTokenService jwtTokenService)
         {
             _context = context;
+            _logger = logger;
             _jwtTokenService = jwtTokenService;
         }
 
         [HttpGet]
         public ActionResult<IEnumerable<Room>> GetRooms()
         {
+            _logger.LogInformation("Get all rooms");
             return Ok(_context.Rooms);
         }
 
         [HttpGet("{Id}")]
         public ActionResult<Room> GetRoomById(int id)
         {
+            _logger.LogInformation($"Get room {id}");
             return Ok(_context.Rooms.FirstOrDefault(room => room.Id == id));
         }
 
         [HttpPost]
-        public ActionResult<object> AddRoom([FromBody] RoomUpdate RoomUpdate)
+        public ActionResult<object> AddRoom([FromBody] RoomUpdate RoomAdd)
         {
-            var newRoom = RoomUpdate.newRoom;
-            var token = RoomUpdate.token;
+            _logger.LogInformation($"Add room {RoomAdd?.newRoom?.Name}");
+
+            var newRoom = RoomAdd.newRoom;
+            var token = RoomAdd.token;
 
             var userId = _jwtTokenService.GetUserIdFromToken(token);
 
@@ -62,6 +68,7 @@ namespace RoomBookingApi.Controllers
         [HttpPut]
         public ActionResult UpdateRoom([FromBody] RoomUpdate RoomUpdate)
         {
+            _logger.LogInformation($"Update room {RoomUpdate.newRoom.Name}");
 
             var newRoom = RoomUpdate.newRoom;
             var token = RoomUpdate.token;
@@ -106,6 +113,7 @@ namespace RoomBookingApi.Controllers
         [HttpDelete]
         public ActionResult DeleteRoom([FromQuery] int roomId, [FromQuery] string token)
         {
+            _logger.LogInformation($"Delete room {roomId}");
 
             var userId = _jwtTokenService.GetUserIdFromToken(token);
 

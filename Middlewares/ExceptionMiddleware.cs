@@ -19,6 +19,8 @@ namespace RoomBookingApi.Middlewares
             }
             catch (Exception ex)
             {
+                var logger = context.RequestServices.GetService<ILogger>();
+                logger?.LogError(ex, "Internal Server Error");
                 var error = $"Internal Server Error: {ex.Message}";
                 Console.WriteLine(error);
                 context.Response.StatusCode = StatusCodes.Status500InternalServerError;

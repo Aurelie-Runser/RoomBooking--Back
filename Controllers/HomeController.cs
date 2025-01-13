@@ -5,7 +5,7 @@ namespace RoomBookingApi.Controllers
 {
 
     [ApiController]
-    [Route("/home")]
+    [Route("/")]
 
     public class HomeController : ControllerBase
     {
@@ -16,7 +16,7 @@ namespace RoomBookingApi.Controllers
 
         public IActionResult GetHome()
         {
-            return Ok("Hello World !");
+            return Ok("Room Booking API");
         }
     }
 }
