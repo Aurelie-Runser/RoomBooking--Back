@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using RoomBookingApi.Data;
 using RoomBookingApi.Middlewares;
+using RoomBookingApi.Models;
 using RoomBookingApi.Services;
 using Serilog;
 
@@ -41,6 +42,8 @@ namespace RoomBookingApi
                             .AllowAnyHeader());
                 });
 
+                builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("ApplicationSettings"));
+                
                 var app = builder.Build();
 
                 // Configure the HTTP request pipeline.
