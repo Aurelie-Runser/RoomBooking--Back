@@ -11,6 +11,9 @@ namespace RoomBookingApi.Controllers
     [ApiController]
     [Route("/room")]
 
+    // [Route("api/v{version:apiVersion}/room")]
+    // [ApiVersion("1.0")]
+    // [ApiVersion("2.0")]
     public class RoomController : ControllerBase
     {
 
@@ -26,6 +29,7 @@ namespace RoomBookingApi.Controllers
         }
 
         [HttpGet]
+        // [MapToApiVersion("1.0")]
         public ActionResult<IEnumerable<Room>> GetRooms()
         {
             _logger.LogInformation("Get all rooms");

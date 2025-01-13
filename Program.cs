@@ -1,4 +1,6 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using RoomBookingApi.Data;
 using RoomBookingApi.Middlewares;
 using RoomBookingApi.Models;
@@ -24,7 +26,23 @@ namespace RoomBookingApi
                 // Add services to the container.
                 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
                 builder.Services.AddEndpointsApiExplorer();
+
                 builder.Services.AddSwaggerGen();
+                // Si besoin de versionner le projet C#
+                // builder.Services.AddSwaggerGen(opt =>
+                // {
+                //     opt.SwaggerDoc("v1", new OpenApiInfo
+                //     {
+                //         Version = "v1",
+                //         Title = "Room Booking API V1"
+                //     });    
+                //     opt.SwaggerDoc("v2", new OpenApiInfo
+                //     {
+                //         Version = "v2",
+                //         Title = "Room Booking API V2"
+                //     });    
+                // });
+
                 builder.Services.AddControllers();
                 builder.Services.AddDbContext<RoomApiContext>(options => options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
@@ -43,7 +61,21 @@ namespace RoomBookingApi
                 });
 
                 builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("ApplicationSettings"));
-                
+
+                // Si besoin de versionner le projet C#
+                // builder.Services.AddApiVersioning(options =>
+                // {
+                //     options.DefaultApiVersion = new ApiVersion(1, 0);
+                //     options.AssumeDefaultVersionWhenUnspecified = true;
+                //     options.ReportApiVersions = true;
+                // });
+
+                // builder.Services.AddVersionedApiExplorer(setup =>
+                // {
+                //     setup.GroupNameFormat = "'v'VVV";
+                //     setup.SubstituteApiVersionInUrl = true;
+                // });
+
                 var app = builder.Build();
 
                 // Configure the HTTP request pipeline.
@@ -51,6 +83,12 @@ namespace RoomBookingApi
                 {
                     app.UseSwagger();
                     app.UseSwaggerUI();
+                    // Si besoin de versionner le projet C#
+                    app.UseSwaggerUI(setup =>
+                    {
+                        setup.SwaggerEndpoint("/swagger/v1/swagger.json", "Room Booking API V1");
+                        setup.SwaggerEndpoint("/swagger/v2/swagger.json", "Room Booking API V2");
+                    });
                 }
 
                 app.UseCors("AllowAll");
