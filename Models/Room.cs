@@ -1,13 +1,15 @@
 using System.ComponentModel.DataAnnotations;
 using RoomBookingApi.Validations;
 
-namespace RoomBookingApi.Models{
+namespace RoomBookingApi.Models
+{
 
-    public record Room{
+    public record Room
+    {
 
         [Required]
-        
-        public int Id { get; set; } 
+
+        public int Id { get; set; }
 
         [Required]
         [StringLength(50)]
@@ -29,30 +31,32 @@ namespace RoomBookingApi.Models{
 
         [Required]
         [Range(0, 1000)]
-        public decimal Area{ get; set; }
+        public decimal Area { get; set; }
 
         public bool IsAccessible { get; set; }
 
         public string Surface { get; set; } = string.Empty; // intérieur et/ou exterieur
     }
 
-    public record RoomUpdate{
+    public record RoomUpdate
+    {
 
         [Required]
-        public Room newRoom { get; set; } 
+        public Room newRoom { get; set; }
 
         [Required]
-        public string token { get; set; } 
+        public string token { get; set; }
 
     }
 
-    public record RoomDelete{
+    public record RoomDelete
+    {
 
         [Required]
-        public int roomId { get; set; } 
+        public int roomId { get; set; }
 
         [Required]
-        public string token { get; set; } 
+        public string token { get; set; }
 
     }
 }

@@ -3,25 +3,29 @@ using RoomBookingApi.Data;
 using RoomBookingApi.Middlewares;
 using RoomBookingApi.Services;
 
-namespace RoomBookingApi{
-    
-    internal class Program{
-        private static void Main(string[] args){
+namespace RoomBookingApi
+{
+
+    internal class Program
+    {
+        private static void Main(string[] args)
+        {
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-            builder.Services.AddControllers();  // utilisation des controllers
-            builder.Services.AddDbContext<RoomApiContext>(options => options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));  // utilisation de la bdd sqlite
+            builder.Services.AddControllers();
+            builder.Services.AddDbContext<RoomApiContext>(options => options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             var secretKey = builder.Configuration["Jwt:SecretKey"];
             var tokenExpiryDuration = int.Parse(builder.Configuration["Jwt:ExpiryDurationInHours"]);
             builder.Services.AddSingleton(new JwtTokenService(secretKey, tokenExpiryDuration));
 
             // A changer lors de la mise en ligne pour restreindre l'accès
-            builder.Services.AddCors(options => {
+            builder.Services.AddCors(options =>
+            {
                 options.AddPolicy("AllowAll",
                     policy => policy
                         .AllowAnyOrigin()
@@ -32,7 +36,8 @@ namespace RoomBookingApi{
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment()){
+            if (app.Environment.IsDevelopment())
+            {
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }

@@ -1,12 +1,14 @@
 using System.ComponentModel.DataAnnotations;
 using RoomBookingApi.Validations;
 
-namespace RoomBookingApi.Models{
+namespace RoomBookingApi.Models
+{
 
-    public record UserBase{
+    public record UserBase
+    {
 
         [Required]
-        public int Id { get; set; } 
+        public int Id { get; set; }
 
         [Required]
         public string Lastname { get; set; } = string.Empty;
@@ -25,15 +27,18 @@ namespace RoomBookingApi.Models{
         [RoleValidation]
         public string Role { get; set; } = "user";
 
-        public bool IsAdmin() {
+        public bool IsAdmin()
+        {
             return string.Equals(Role, "admin", StringComparison.OrdinalIgnoreCase);
         }
     }
 
-    public record User : UserBase {
+    public record User : UserBase
+    {
         public string Password { get; set; } = string.Empty;
     }
 
-    public record UserDto : UserBase{
+    public record UserDto : UserBase
+    {
     }
 }

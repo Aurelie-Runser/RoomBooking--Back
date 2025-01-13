@@ -1,8 +1,10 @@
 using System.ComponentModel.DataAnnotations;
 using RoomBookingApi.Models;
 
-namespace RoomBookingApi.Mappers{
-    public static class UserExtensions{
+namespace RoomBookingApi.Mappers
+{
+    public static class UserExtensions
+    {
         public static UserDto ToDto(this User user)
         {
             return new UserDto

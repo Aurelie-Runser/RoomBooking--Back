@@ -1,9 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using RoomBookingApi.Models;
 
-namespace RoomBookingApi.Data{
+namespace RoomBookingApi.Data
+{
 
-    public class RoomApiContext(DbContextOptions<RoomApiContext> options) : DbContext(options){
+    public class RoomApiContext(DbContextOptions<RoomApiContext> options) : DbContext(options)
+    {
         public DbSet<Room> Rooms { get; set; }
         public DbSet<User> Users { get; set; }
     }
