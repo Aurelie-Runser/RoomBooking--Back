@@ -3843,11 +3843,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Aurélie\\Desktop\\Ynov\\WebFullStack\\ProjetGroupe\\Code\\ReservationDeSalle--Back\\RoomBookingApi.csproj",
+      "projectUniqueName": "C:\\Users\\Aurélie\\Desktop\\Ynov\\WebFullStack\\ProjetGroupe\\Code\\RoomBooking--Back\\RoomBookingApi.csproj",
       "projectName": "RoomBookingApi",
-      "projectPath": "C:\\Users\\Aurélie\\Desktop\\Ynov\\WebFullStack\\ProjetGroupe\\Code\\ReservationDeSalle--Back\\RoomBookingApi.csproj",
+      "projectPath": "C:\\Users\\Aurélie\\Desktop\\Ynov\\WebFullStack\\ProjetGroupe\\Code\\RoomBooking--Back\\RoomBookingApi.csproj",
       "packagesPath": "C:\\Users\\Aurélie\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Aurélie\\Desktop\\Ynov\\WebFullStack\\ProjetGroupe\\Code\\ReservationDeSalle--Back\\obj\\",
+      "outputPath": "C:\\Users\\Aurélie\\Desktop\\Ynov\\WebFullStack\\ProjetGroupe\\Code\\RoomBooking--Back\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Aurélie\\AppData\\Roaming\\NuGet\\NuGet.Config"

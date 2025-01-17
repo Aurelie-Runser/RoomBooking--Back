@@ -1,0 +1,25 @@
+stages:
+  - lint
+  - test
+  - build
+  - deploy
+
+lint:
+  stage: lint
+  script:
+    - echo "Running linting"
+
+test:
+  stage: test
+  script:
+    - echo "Running tests"
+
+build:
+  stage: build
+  script:
+    - echo "Running build"
+
+deploy:
+  stage: deploy
+  script:
+    - echo "Running deployment"
