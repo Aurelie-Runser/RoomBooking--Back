@@ -1,11 +1,5 @@
-stages:
-  - lint
-  - test
-  - build
-  - deploy
-
 lint:
-  stage: lint
+  stage: test
   script:
     - echo "Running linting"
 
