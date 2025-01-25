@@ -17,11 +17,13 @@ namespace RoomBookingApi.Controllers
 
         private readonly RoomApiContext _context;
         private readonly ILogger<BookingController> _logger;
+        private readonly JwtTokenService _jwtTokenService;
 
-        public BookingController(RoomApiContext context, ILogger<BookingController> logger)
+        public BookingController(RoomApiContext context, ILogger<BookingController> logger, JwtTokenService jwtTokenService)
         {
             _context = context;
             _logger = logger;
+            _jwtTokenService = jwtTokenService;
         }
 
         [HttpGet]
@@ -36,6 +38,27 @@ namespace RoomBookingApi.Controllers
         {
             _logger.LogInformation($"Get boooking {id}");
             return Ok(_context.Bookings.FirstOrDefault(booking => booking.Id == id));
+        }
+
+        [HttpPost]
+        public ActionResult<object> AddBooking([FromBody] BookingUpdate BookingAdd)
+        {
+            _logger.LogInformation($"Add booking");
+
+            var newBooking = BookingAdd.NewBooking;
+            var token = BookingAdd.Token;
+
+            var userId = _jwtTokenService.GetUserIdFromToken(token);
+
+            var user = _context.Users.FirstOrDefault(u => u.Id == userId);
+            if (user == null)
+            {
+                return NotFound(new { Message = "Token invalide ou utilisateur introuvable." });
+            }
+
+            _context.Bookings.Add(newBooking);
+            _context.SaveChanges();
+            return Created(nameof(AddBooking), new { Id = newBooking.Id });
         }
     }
 }

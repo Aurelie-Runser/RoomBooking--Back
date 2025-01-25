@@ -11,6 +11,11 @@ namespace RoomBookingApi.Models
         public int Id { get; set; }
 
         [Required]
+        public required string Name { get; set; }
+
+        public string? Description { get; set; }
+
+        [Required]
         public int IdRoom { get; set; }
 
         [Required]
@@ -24,6 +29,17 @@ namespace RoomBookingApi.Models
 
         [Required]
         [StatusValidation]
-        public DateTime Statut { get; set; }
+        public string Statut { get; set; } = "Prévus";
+    }
+
+    public record BookingUpdate
+    {
+
+        [Required]
+        public required Booking NewBooking { get; set; }
+
+        [Required]
+        public required string Token { get; set; }
+
     }
 }
