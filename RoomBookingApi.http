@@ -98,7 +98,7 @@ Content-Type: application/json
     "Password": "vmk",
     "Company": "Ynov",
     "Job": "student",
-    "Role": 0
+    "Role": "admin"
 }
 
 ###
@@ -113,7 +113,7 @@ Content-Type: application/json
     "Password": "IamTheBest",
     "Company": "SpeedWagon Company",
     "Job": "Directeur",
-    "Role": 1
+    "Role": "user"
 }
 
 ###
@@ -135,4 +135,9 @@ Content-Type: application/json
 ###
 
 DELETE {{RoomBooking_Back__HostAddress}}/user/2
+Content-Type: application/json
+
+###
+
+GET {{RoomBooking_Back__HostAddress}}/booking
 Content-Type: application/json
