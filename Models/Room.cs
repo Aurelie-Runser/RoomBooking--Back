@@ -42,10 +42,10 @@ namespace RoomBookingApi.Models
     {
 
         [Required]
-        public Room newRoom { get; set; }
+        public required Room NewRoom { get; set; }
 
         [Required]
-        public string token { get; set; }
+        public required string Token { get; set; }
 
     }
 
@@ -56,7 +56,7 @@ namespace RoomBookingApi.Models
         public int roomId { get; set; }
 
         [Required]
-        public string token { get; set; }
+        public required string Token { get; set; }
 
     }
 }

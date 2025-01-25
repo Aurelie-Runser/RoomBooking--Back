@@ -8,7 +8,7 @@ namespace RoomBookingApi.Validations
     {
         private readonly string[] _allowedRoles = { "admin", "user" };
 
-        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
             if (value is string role && _allowedRoles.Contains(role.ToLower()))
             {

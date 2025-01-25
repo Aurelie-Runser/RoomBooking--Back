@@ -6,7 +6,7 @@ namespace RoomBookingApi.Validations
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
     public class GroupeValidationAttribute : ValidationAttribute
     {
-        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
             var allowedGroupes = Groupes.AllowedGroupes;
 
@@ -15,7 +15,7 @@ namespace RoomBookingApi.Validations
                 return ValidationResult.Success;
             }
 
-            return new ValidationResult($"Le groupe doit être l'un des suivants : {string.Join(", ", allowedGroupes)}");
+            return new ValidationResult("Ce groupe n'est pas possible, merci de renseigner un groupe valide.");
         }
     }
 }

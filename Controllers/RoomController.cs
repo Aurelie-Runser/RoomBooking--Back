@@ -46,10 +46,10 @@ namespace RoomBookingApi.Controllers
         [HttpPost]
         public ActionResult<object> AddRoom([FromBody] RoomUpdate RoomAdd)
         {
-            _logger.LogInformation($"Add room {RoomAdd?.newRoom?.Name}");
+            _logger.LogInformation($"Add room {RoomAdd.NewRoom.Name}");
 
-            var newRoom = RoomAdd.newRoom;
-            var token = RoomAdd.token;
+            var newRoom = RoomAdd.NewRoom;
+            var token = RoomAdd.Token;
 
             var userId = _jwtTokenService.GetUserIdFromToken(token);
 
@@ -72,10 +72,10 @@ namespace RoomBookingApi.Controllers
         [HttpPut]
         public ActionResult UpdateRoom([FromBody] RoomUpdate RoomUpdate)
         {
-            _logger.LogInformation($"Update room {RoomUpdate.newRoom.Name}");
+            _logger.LogInformation($"Update room {RoomUpdate.NewRoom.Name}");
 
-            var newRoom = RoomUpdate.newRoom;
-            var token = RoomUpdate.token;
+            var newRoom = RoomUpdate.NewRoom;
+            var token = RoomUpdate.Token;
 
             var userId = _jwtTokenService.GetUserIdFromToken(token);
 
