@@ -156,6 +156,11 @@ Content-Type: application/json
 
 ###
 
+GET {{RoomBooking_Back__HostAddress}}/booking/user/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxIiwiZW1haWwiOiJhdXJlbGllLnJ1bnNlcjI1QGdtYWlsLmNvbSIsIm5iZiI6MTczNzkxMTU5MiwiZXhwIjoxNzM3OTk3OTkyLCJpYXQiOjE3Mzc5MTE1OTJ9.REvEi9Sy2IVxivyCEJcBtz-NGPlk5I1eqpqf2ysNegU
+Content-Type: application/json
+
+###
+
 POST {{RoomBooking_Back__HostAddress}}/booking/
 Content-Type: application/json
 
@@ -168,4 +173,36 @@ Content-Type: application/json
         "DateTo": "2025-02-01T15:00:00"
     },
     "Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxIiwiZW1haWwiOiJsYUBsYS5jb20iLCJuYmYiOjE3Mzc4MTcwMjcsImV4cCI6MTczNzkwMzQyNywiaWF0IjoxNzM3ODE3MDI3fQ.zuy0xkWcwuvbBZE6wOUlX4VLxc1U1xCQfUN1AUWxlUo"
+}
+
+###
+
+POST {{RoomBooking_Back__HostAddress}}/booking/
+Content-Type: application/json
+
+{
+    "NewBooking": {
+        "Name": "Réunion 2",
+        "IdRoom": 2,
+        "IdOrganizer": 1,
+        "DateFrom": "2025-02-02T14:00:00",
+        "DateTo": "2025-02-02T15:00:00"
+    },
+    "Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxIiwiZW1haWwiOiJhdXJlbGllLnJ1bnNlcjI1QGdtYWlsLmNvbSIsIm5iZiI6MTczNzkxMTU5MiwiZXhwIjoxNzM3OTk3OTkyLCJpYXQiOjE3Mzc5MTE1OTJ9.REvEi9Sy2IVxivyCEJcBtz-NGPlk5I1eqpqf2ysNegU"
+}
+
+###
+
+POST {{RoomBooking_Back__HostAddress}}/booking/
+Content-Type: application/json
+
+{
+    "NewBooking": {
+        "Name": "Réunion 2",
+        "IdRoom": 5,
+        "IdOrganizer": 2,
+        "DateFrom": "2025-02-02T14:00:00",
+        "DateTo": "2025-02-02T15:00:00"
+    },
+    "Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxIiwiZW1haWwiOiJhdXJlbGllLnJ1bnNlcjI1QGdtYWlsLmNvbSIsIm5iZiI6MTczNzkxMTU5MiwiZXhwIjoxNzM3OTk3OTkyLCJpYXQiOjE3Mzc5MTE1OTJ9.REvEi9Sy2IVxivyCEJcBtz-NGPlk5I1eqpqf2ysNegU"
 }

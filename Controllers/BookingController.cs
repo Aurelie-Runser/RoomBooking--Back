@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using RoomBookingApi.Data;
 using RoomBookingApi.Models;
 using RoomBookingApi.Services;
+using RoomBookingApi.Mappers;
 using RoomBookingApi.Validations;
-
 
 namespace RoomBookingApi.Controllers
 {
@@ -33,11 +33,41 @@ namespace RoomBookingApi.Controllers
             return Ok(_context.Bookings);
         }
 
+        [HttpGet("user/{token}")]
+        public ActionResult<IEnumerable<BookingDto>> GetBookingsUser(string token)
+        {
+            _logger.LogInformation("Get booking of a user");
+
+            var userId = _jwtTokenService.GetUserIdFromToken(token);
+
+            if (userId == null)
+            {
+                return BadRequest(new { Message = "Token invalide ou utilisateur introuvable." });
+            }
+
+            var bookings = _context.Bookings
+                .Where(b => b.IdOrganizer == userId)
+                .Select(b => BookingExtensions.ToDto(b, _context))
+                .ToList();
+            
+            return Ok(bookings);
+        }
+
         [HttpGet("{Id}")]
-        public ActionResult<Booking> GetBookingById(int id)
+        public ActionResult<BookingDto> GetBookingById(int id)
         {
             _logger.LogInformation($"Get boooking {id}");
-            return Ok(_context.Bookings.FirstOrDefault(booking => booking.Id == id));
+
+           var booking = _context.Bookings.FirstOrDefault(b => b.Id == id);
+
+            if (booking == null)
+            {
+                return NotFound(new { Message = "Réservation non trouvée" });
+            }
+
+            var bookingDto = BookingExtensions.ToDto(booking, _context);
+
+            return Ok(bookingDto);
         }
 
         [HttpPost]
