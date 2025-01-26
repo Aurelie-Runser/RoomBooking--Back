@@ -32,6 +32,16 @@ namespace RoomBookingApi.Models
         public string Statut { get; set; } = "Prévus";
     }
 
+    public record BookingDto : Booking
+    {
+        public string? RoomName { get; set; }
+        public string? OrganizerFirstname { get; set; }
+        public string? OrganizerLastname { get; set; }
+        public string? DateFormat { get; set; }
+        public string? TimeFromFormat { get; set; }
+        public string? TimeToFormat { get; set; }
+    }
+
     public record BookingUpdate
     {
 
@@ -40,6 +50,5 @@ namespace RoomBookingApi.Models
 
         [Required]
         public required string Token { get; set; }
-
     }
 }
