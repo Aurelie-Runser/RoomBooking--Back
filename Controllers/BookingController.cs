@@ -78,13 +78,22 @@ namespace RoomBookingApi.Controllers
             var newBooking = BookingAdd.NewBooking;
             var token = BookingAdd.Token;
 
-            var userId = _jwtTokenService.GetUserIdFromToken(token);
+            var userId = _jwtTokenService.GetUserIdFromToken(token) ?? 0;
 
             var user = _context.Users.FirstOrDefault(u => u.Id == userId);
             if (user == null)
             {
                 return NotFound(new { Message = "Token invalide ou utilisateur introuvable." });
             }
+
+            var room = _context.Rooms.FirstOrDefault(room => room.Id == newBooking.IdRoom);
+            if (room == null)
+            {
+                return NotFound(new { Message = "Cette salle n'existe pas." });
+            }
+
+            newBooking.IdOrganizer = userId;
+            newBooking.Statut = Status.AllowedStatus[0];
 
             _context.Bookings.Add(newBooking);
             _context.SaveChanges();

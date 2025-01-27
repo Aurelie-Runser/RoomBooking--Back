@@ -6,4 +6,4 @@ namespace RoomBookingApi.Validations
             "Prévus", "Passer", "Annuler"
         };
     }
-}
+}   
