@@ -46,12 +46,22 @@ namespace RoomBookingApi.Controllers
                 return BadRequest(new { Message = "Token invalide ou utilisateur introuvable." });
             }
 
-            var bookings = _context.Bookings
+            var bookingsAsOrganizer = _context.Bookings
                 .Where(b => b.IdOrganizer == userId)
                 .Select(b => BookingExtensions.ToDto(b, _context))
                 .ToList();
+
+            var bookingsAsGuest = _context.Bookings
+                .Where(b => b.Guests.Any(g => g.IdUser == userId))
+                .Select(b => BookingExtensions.ToDto(b, _context))
+                .ToList();
+
+            var allBookings = bookingsAsOrganizer
+                .Concat(bookingsAsGuest)
+                .Distinct()
+                .ToList();
             
-            return Ok(bookings);
+            return Ok(allBookings);
         }
 
         [HttpGet("{Id}")]
