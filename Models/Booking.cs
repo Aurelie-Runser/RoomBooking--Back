@@ -43,6 +43,7 @@ namespace RoomBookingApi.Models
         public string? DateFormat { get; set; }
         public string? TimeFromFormat { get; set; }
         public string? TimeToFormat { get; set; }
+        public string[]? GuestsName { get; set; }
     }
 
     public record BookingUpdate

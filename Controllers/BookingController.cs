@@ -5,6 +5,7 @@ using RoomBookingApi.Models;
 using RoomBookingApi.Services;
 using RoomBookingApi.Mappers;
 using RoomBookingApi.Validations;
+using Microsoft.EntityFrameworkCore;
 
 namespace RoomBookingApi.Controllers
 {
@@ -58,7 +59,9 @@ namespace RoomBookingApi.Controllers
         {
             _logger.LogInformation($"Get boooking {id}");
 
-           var booking = _context.Bookings.FirstOrDefault(b => b.Id == id);
+           var booking = _context.Bookings
+                            .Include(b => b.Guests)
+                            .FirstOrDefault(b => b.Id == id);
 
             if (booking == null)
             {
