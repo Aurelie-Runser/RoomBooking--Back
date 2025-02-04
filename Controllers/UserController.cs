@@ -26,7 +26,16 @@ namespace RoomBookingApi.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<UserBase>> GetUsers()
         {
-            return Ok(_context.Users);
+            var users = _context.Users
+                .Select(u => new UserBase
+                {
+                    Id = u.Id,
+                    Lastname = u.Lastname,
+                    Firstname = u.Firstname
+                })
+                .ToList();
+
+            return Ok(users);
         }
 
         [HttpGet("{Id}")]

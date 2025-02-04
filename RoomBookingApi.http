@@ -16,15 +16,19 @@ POST {{RoomBooking_Back__HostAddress}}/room/
 Content-Type: application/json
 
 {
-    "Name": "salle 1",
-    "Picture": "room1_small",
-    "Adress": "2 rue de la Paix",
-    "AdressComplements": "",
-    "Groupe": "Petite Réunion",
-    "Capacity": 6,
-    "Area": 20,
-    "Surface": "interieur et exterieur",
-    "IsAccessible": true
+    "NewRoom":
+    {
+        "Name": "salle 1",
+        "Picture": "room1_small",
+        "Adress": "2 rue de la Paix",
+        "AdressComplements": "",
+        "Groupe": "Petite Réunion",
+        "Capacity": 6,
+        "Area": 20,
+        "Surface": "interieur et exterieur",
+        "IsAccessible": true
+    },
+    "Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxIiwiZW1haWwiOiJhdXJlbGllLnJ1bnNlcjI1QGdtYWlsLmNvbSIsIm5iZiI6MTczNzgyODEwNywiZXhwIjoxNzM3OTE0NTA3LCJpYXQiOjE3Mzc4MjgxMDd9.C6_U-oLoS4HW2Pi9Ogq8NHH0ywdz9dbBJFM2Oi5COIs"
 }
 
 
@@ -34,15 +38,19 @@ POST {{RoomBooking_Back__HostAddress}}/room/
 Content-Type: application/json
 
 {
-    "Name": "salle 2",
-    "Picture": "room2_small",
-    "Adress": "19 rue de Lacroix",
-    "AdressComplements": "2ème porte à droite",
-    "Groupe": "Grande Réunion",
-    "Capacity": 10,
-    "Area": 50,
-    "IsAccessible": true,
-    "Surface": "interieur et exterieur"
+    "NewRoom":
+    {
+        "Name": "salle 2",
+        "Picture": "room2_small",
+        "Adress": "19 rue de Lacroix",
+        "AdressComplements": "2ème porte à droite",
+        "Groupe": "Grande Réunion",
+        "Capacity": 10,
+        "Area": 50,
+        "IsAccessible": true,
+        "Surface": "interieur et exterieur"
+    },
+    "Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxIiwiZW1haWwiOiJhdXJlbGllLnJ1bnNlcjI1QGdtYWlsLmNvbSIsIm5iZiI6MTczNzgyODEwNywiZXhwIjoxNzM3OTE0NTA3LCJpYXQiOjE3Mzc4MjgxMDd9.C6_U-oLoS4HW2Pi9Ogq8NHH0ywdz9dbBJFM2Oi5COIs"
 }
 
 ###
@@ -51,15 +59,19 @@ POST {{RoomBooking_Back__HostAddress}}/room/
 Content-Type: application/json
 
 {
-    "Name": "salle 3",
-    "Picture": "room3_small",
-    "Adress": "16 place des Grands Hommes",
-    "AdressComplements": "2ème étage, 1ère porte à gauche",
-    "Groupe": "Fête",
-    "Capacity": 16,
-    "Area": 150.25,
-    "IsAccessible": true,
-    "Surface": "interieur"
+    "NewRoom":
+    {
+        "Name": "salle 3",
+        "Picture": "room3_small",
+        "Adress": "16 place des Grands Hommes",
+        "AdressComplements": "2ème étage, 1ère porte à gauche",
+        "Groupe": "Fête",
+        "Capacity": 16,
+        "Area": 150.25,
+        "IsAccessible": true,
+        "Surface": "interieur"
+    },
+    "Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxIiwiZW1haWwiOiJhdXJlbGllLnJ1bnNlcjI1QGdtYWlsLmNvbSIsIm5iZiI6MTczNzgyODEwNywiZXhwIjoxNzM3OTE0NTA3LCJpYXQiOjE3Mzc4MjgxMDd9.C6_U-oLoS4HW2Pi9Ogq8NHH0ywdz9dbBJFM2Oi5COIs"
 }
 
 ###
@@ -98,7 +110,7 @@ Content-Type: application/json
     "Password": "vmk",
     "Company": "Ynov",
     "Job": "student",
-    "Role": 0
+    "Role": "admin"
 }
 
 ###
@@ -113,7 +125,7 @@ Content-Type: application/json
     "Password": "IamTheBest",
     "Company": "SpeedWagon Company",
     "Job": "Directeur",
-    "Role": 1
+    "Role": "user"
 }
 
 ###
@@ -136,3 +148,77 @@ Content-Type: application/json
 
 DELETE {{RoomBooking_Back__HostAddress}}/user/2
 Content-Type: application/json
+
+###
+
+GET {{RoomBooking_Back__HostAddress}}/booking
+Content-Type: application/json
+
+###
+
+GET {{RoomBooking_Back__HostAddress}}/booking/user/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxIiwiZW1haWwiOiJhdXJlbGllLnJ1bnNlcjI1QGdtYWlsLmNvbSIsIm5iZiI6MTczNzkxMTU5MiwiZXhwIjoxNzM3OTk3OTkyLCJpYXQiOjE3Mzc5MTE1OTJ9.REvEi9Sy2IVxivyCEJcBtz-NGPlk5I1eqpqf2ysNegU
+Content-Type: application/json
+
+###
+
+POST {{RoomBooking_Back__HostAddress}}/booking/
+Content-Type: application/json
+
+{
+    "NewBooking": {
+        "Name": "Réunion Mensuelle",
+        "IdRoom": 1,
+        "IdOrganizer": 1,
+        "DateFrom": "2025-02-01T14:00:00",
+        "DateTo": "2025-02-01T15:00:00"
+    },
+    "Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxIiwiZW1haWwiOiJsYUBsYS5jb20iLCJuYmYiOjE3Mzc4MTcwMjcsImV4cCI6MTczNzkwMzQyNywiaWF0IjoxNzM3ODE3MDI3fQ.zuy0xkWcwuvbBZE6wOUlX4VLxc1U1xCQfUN1AUWxlUo"
+}
+
+###
+
+POST {{RoomBooking_Back__HostAddress}}/booking/
+Content-Type: application/json
+
+{
+    "NewBooking": {
+        "Name": "Réunion 2",
+        "IdRoom": 2,
+        "IdOrganizer": 1,
+        "DateFrom": "2025-02-02T14:00:00",
+        "DateTo": "2025-02-02T15:00:00"
+    },
+    "Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxIiwiZW1haWwiOiJhdXJlbGllLnJ1bnNlcjI1QGdtYWlsLmNvbSIsIm5iZiI6MTczNzkxMTU5MiwiZXhwIjoxNzM3OTk3OTkyLCJpYXQiOjE3Mzc5MTE1OTJ9.REvEi9Sy2IVxivyCEJcBtz-NGPlk5I1eqpqf2ysNegU"
+}
+
+###
+
+POST {{RoomBooking_Back__HostAddress}}/booking/
+Content-Type: application/json
+
+{
+    "NewBooking": {
+        "Name": "Réunion 2",
+        "IdRoom": 5,
+        "IdOrganizer": 2,
+        "DateFrom": "2025-02-02T14:00:00",
+        "DateTo": "2025-02-02T15:00:00"
+    },
+    "Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxIiwiZW1haWwiOiJhdXJlbGllLnJ1bnNlcjI1QGdtYWlsLmNvbSIsIm5iZiI6MTczNzkxMTU5MiwiZXhwIjoxNzM3OTk3OTkyLCJpYXQiOjE3Mzc5MTE1OTJ9.REvEi9Sy2IVxivyCEJcBtz-NGPlk5I1eqpqf2ysNegU"
+}
+
+###
+
+POST {{RoomBooking_Back__HostAddress}}/booking/
+Content-Type: application/json
+
+{
+    "NewBooking": {
+        "Name": "Réunion zoedfr",
+        "IdRoom": 1,
+        "IdOrganizer": 1,
+        "DateFrom": "2024-02-02T14:00:00",
+        "DateTo": "2024-02-02T15:00:00"
+    },
+    "Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxIiwiZW1haWwiOiJhdXJlbGllLnJ1bnNlcjI1QGdtYWlsLmNvbSIsIm5iZiI6MTczNzk5OTE3NCwiZXhwIjoxNzM4MDg1NTc0LCJpYXQiOjE3Mzc5OTkxNzR9.H3FcTCUZSRGZkR2sCzXXjVMEOkmngu4KleDlYN20KbM"
+}

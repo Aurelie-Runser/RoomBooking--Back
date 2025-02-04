@@ -84,11 +84,11 @@ namespace RoomBookingApi
                     app.UseSwagger();
                     app.UseSwaggerUI();
                     // Si besoin de versionner le projet C#
-                    app.UseSwaggerUI(setup =>
-                    {
-                        setup.SwaggerEndpoint("/swagger/v1/swagger.json", "Room Booking API V1");
-                        setup.SwaggerEndpoint("/swagger/v2/swagger.json", "Room Booking API V2");
-                    });
+                    // app.UseSwaggerUI(setup =>
+                    // {
+                    //     setup.SwaggerEndpoint("/swagger/v1/swagger.json", "Room Booking API V1");
+                    //     setup.SwaggerEndpoint("/swagger/v2/swagger.json", "Room Booking API V2");
+                    // });
                 }
 
                 app.UseCors("AllowAll");
