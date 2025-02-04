@@ -97,6 +97,22 @@ namespace RoomBookingApi.Controllers
 
             _context.Bookings.Add(newBooking);
             _context.SaveChanges();
+
+            var guests = BookingAdd.Guests;
+
+            if (guests != null && guests.Length > 0)
+            {
+                foreach(var guest in guests)
+                {
+                    _context.Guests.Add(new Guest 
+                    {
+                        IdBooking = newBooking.Id,
+                        IdUser = guest
+                    });
+                }
+            }
+
+            _context.SaveChanges();
             return Created(nameof(AddBooking), new { Id = newBooking.Id });
         }
     }

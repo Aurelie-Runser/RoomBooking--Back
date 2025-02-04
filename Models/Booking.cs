@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using RoomBookingApi.Validations;
 
 namespace RoomBookingApi.Models
@@ -30,6 +31,8 @@ namespace RoomBookingApi.Models
         [Required]
         [StatusValidation]
         public string Statut { get; set; } = "Prévus";
+
+        public List<Guest> Guests { get; set; } = new();
     }
 
     public record BookingDto : Booking
@@ -50,5 +53,7 @@ namespace RoomBookingApi.Models
 
         [Required]
         public required string Token { get; set; }
+
+        public int[]? Guests { get; set; }
     }
 }

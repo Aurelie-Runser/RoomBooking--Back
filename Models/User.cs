@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using RoomBookingApi.Validations;
 
 namespace RoomBookingApi.Models
@@ -26,6 +27,8 @@ namespace RoomBookingApi.Models
         [Required]
         [RoleValidation]
         public string Role { get; set; } = "user";
+
+        public List<Guest> Guests { get; set; } = new();
 
         public bool IsAdmin()
         {
