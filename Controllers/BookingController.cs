@@ -105,6 +105,11 @@ namespace RoomBookingApi.Controllers
                 return NotFound(new { Message = "Cette salle n'existe pas." });
             }
 
+            if (newBooking.DateFrom < DateTime.Now || newBooking.DateFrom > newBooking.DateTo)
+            {
+                return BadRequest(new { Message = "Veuillez renseigner une date future." });
+            }
+
             newBooking.IdOrganizer = userId;
             newBooking.Statut = Status.AllowedStatus[0];
 
