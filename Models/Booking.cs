@@ -23,10 +23,13 @@ namespace RoomBookingApi.Models
         public int IdOrganizer { get; set; }
 
         [Required]
-        public DateTime DateFrom { get; set; }
+        public DateOnly Day { get; set; }
 
         [Required]
-        public DateTime DateTo { get; set; }
+        public string TimeFrom { get; set; } = "";
+
+        [Required]
+        public string TimeTo { get; set; } = "";
 
         [Required]
         [StatusValidation]
@@ -40,9 +43,6 @@ namespace RoomBookingApi.Models
         public string? RoomName { get; set; }
         public string? OrganizerFirstname { get; set; }
         public string? OrganizerLastname { get; set; }
-        public string? DateFormat { get; set; }
-        public string? TimeFromFormat { get; set; }
-        public string? TimeToFormat { get; set; }
         public string[]? GuestsName { get; set; }
     }
 
