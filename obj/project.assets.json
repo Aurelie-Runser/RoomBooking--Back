@@ -3895,19 +3895,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Aurélie\\.nuget\\packages\\": {}
+    "/Users/alixan/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Aurélie\\Desktop\\Ynov\\WebFullStack\\ProjetGroupe\\Code\\RoomBooking--Back\\RoomBookingApi.csproj",
+      "projectUniqueName": "/Users/alixan/Desktop/Projets/roombooking-api/RoomBookingApi.csproj",
       "projectName": "RoomBookingApi",
-      "projectPath": "C:\\Users\\Aurélie\\Desktop\\Ynov\\WebFullStack\\ProjetGroupe\\Code\\RoomBooking--Back\\RoomBookingApi.csproj",
-      "packagesPath": "C:\\Users\\Aurélie\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Aurélie\\Desktop\\Ynov\\WebFullStack\\ProjetGroupe\\Code\\RoomBooking--Back\\obj\\",
+      "projectPath": "/Users/alixan/Desktop/Projets/roombooking-api/RoomBookingApi.csproj",
+      "packagesPath": "/Users/alixan/.nuget/packages/",
+      "outputPath": "/Users/alixan/Desktop/Projets/roombooking-api/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Aurélie\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "/Users/alixan/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
@@ -3930,7 +3930,8 @@
         "enableAudit": "true",
         "auditLevel": "low",
         "auditMode": "direct"
-      }
+      },
+      "SdkAnalysisLevel": "9.0.100"
     },
     "frameworks": {
       "net8.0": {
@@ -3986,6 +3987,20 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
+        "downloadDependencies": [
+          {
+            "name": "Microsoft.AspNetCore.App.Ref",
+            "version": "[8.0.12, 8.0.12]"
+          },
+          {
+            "name": "Microsoft.NETCore.App.Host.osx-arm64",
+            "version": "[8.0.12, 8.0.12]"
+          },
+          {
+            "name": "Microsoft.NETCore.App.Ref",
+            "version": "[8.0.12, 8.0.12]"
+          }
+        ],
         "frameworkReferences": {
           "Microsoft.AspNetCore.App": {
             "privateAssets": "none"
@@ -3994,7 +4009,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.404/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.102/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
