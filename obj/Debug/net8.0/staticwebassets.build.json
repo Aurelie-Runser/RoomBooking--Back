@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "9yDXsxJYPDq0TxXKxAiHv040ly5ArTZa/XpTVDZLALI=",
+  "Source": "RoomBookingApi",
+  "BasePath": "_content/RoomBookingApi",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}
