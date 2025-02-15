@@ -123,14 +123,7 @@ namespace RoomBookingApi.Controllers
 
             if (guests != null && guests.Length > 0)
             {
-                foreach(var guest in guests)
-                {
-                    _context.Guests.Add(new Guest 
-                    {
-                        IdBooking = newBooking.Id,
-                        IdUser = guest
-                    });
-                }
+                AddGuests(newBooking.Id, guests);
             }
 
             _context.SaveChanges();
@@ -206,6 +199,21 @@ namespace RoomBookingApi.Controllers
                 }
             }
             return availableHours;
+        }
+
+
+        private void AddGuests(int bookingId, int[] guestIds)
+        {
+            foreach (var guestId in guestIds)
+            {
+                _context.Guests.Add(new Guest
+                {
+                    IdBooking = bookingId,
+                    IdUser = guestId
+                });
+            }
+
+            _context.SaveChanges();
         }
 
     }
