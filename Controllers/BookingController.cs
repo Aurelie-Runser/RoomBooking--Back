@@ -137,6 +137,37 @@ namespace RoomBookingApi.Controllers
             return Created(nameof(AddBooking), new { Id = newBooking.Id });
         }
 
+        [HttpGet("room/{roomId}")]
+        public ActionResult<IEnumerable<BookingDto>> GetBookingsByRoom(int roomId)
+        {
+            _logger.LogInformation($"Get bookings for room {roomId}");
+
+            var room = _context.Rooms.FirstOrDefault(r => r.Id == roomId);
+
+            if (room == null)
+            {
+                _logger.LogWarning($"Room {roomId} not found");
+                return NotFound(new { Message = "Salle non trouvée" });
+            }
+
+            _logger.LogInformation($"Room found: {room.Id}");
+
+            var bookings = _context.Bookings
+                .Include(b => b.Guests)
+                .Where(b => b.IdRoom == roomId)
+                .ToList();
+                
+            _logger.LogInformation($"Raw bookings count: {bookings.Count}");
+
+            var bookingDtos = bookings
+                .Select(b => BookingExtensions.ToDto(b, _context))
+                .ToList();
+
+            _logger.LogInformation($"DTO bookings count: {bookingDtos.Count}");
+
+            return Ok(bookingDtos);
+        }
+
         [HttpGet("available-start-hours")]
         public ActionResult<IEnumerable<string>> GetAvailableStartHours([FromQuery] int roomId, [FromQuery] string date)
         {
