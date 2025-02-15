@@ -105,6 +105,14 @@ namespace RoomBookingApi.Controllers
                 return NotFound(new { Message = "Cette salle n'existe pas." });
             }
 
+            var TimeFrom = TimeOnly.Parse(newBooking.TimeFrom);
+            var TimeTo = TimeOnly.Parse(newBooking.TimeTo);
+
+            if ((newBooking.Day < DateOnly.FromDateTime(DateTime.Now) && TimeFrom < TimeOnly.FromDateTime(DateTime.Now)) || TimeFrom > TimeTo)
+            {
+                return BadRequest(new { Message = "Veuillez renseigner une date future." });
+            }
+
             newBooking.IdOrganizer = userId;
             newBooking.Statut = Status.AllowedStatus[0];
 
@@ -135,6 +143,7 @@ namespace RoomBookingApi.Controllers
             _logger.LogInformation($"Get bookings for room {roomId}");
 
             var room = _context.Rooms.FirstOrDefault(r => r.Id == roomId);
+
             if (room == null)
             {
                 _logger.LogWarning($"Room {roomId} not found");
@@ -147,7 +156,7 @@ namespace RoomBookingApi.Controllers
                 .Include(b => b.Guests)
                 .Where(b => b.IdRoom == roomId)
                 .ToList();
-
+                
             _logger.LogInformation($"Raw bookings count: {bookings.Count}");
 
             var bookingDtos = bookings
@@ -158,5 +167,46 @@ namespace RoomBookingApi.Controllers
 
             return Ok(bookingDtos);
         }
+
+        [HttpGet("available-start-hours")]
+        public ActionResult<IEnumerable<string>> GetAvailableStartHours([FromQuery] int roomId, [FromQuery] string date)
+        {
+            _logger.LogInformation($"Vérifie les heures disponibles pour la salle {roomId} le {date}");
+
+            if (!DateOnly.TryParse(date, out DateOnly selectedDate))
+            {
+                return BadRequest("Format de date invalide");
+            }
+
+            List<string> availableHours = GenerateAvailableHours();
+
+            var bookedSlots = _context.Bookings
+                .Where(b => b.IdRoom == roomId && b.Day == selectedDate)
+                .ToList();
+
+            var availableStartHours = availableHours
+                .Where(time =>
+                {
+                    var parsedTime = TimeOnly.Parse(time);
+                    return !bookedSlots.Any(slot => parsedTime >= TimeOnly.Parse(slot.TimeFrom) && parsedTime < TimeOnly.Parse(slot.TimeTo));
+                })
+                .ToList();
+                
+            return Ok(availableStartHours);
+        }
+
+        private List<string> GenerateAvailableHours()
+        {
+            var availableHours = new List<string>();
+            for (int hour = 7; hour <= 23; hour++)
+            {
+                for (int minutes = 0; minutes < 60; minutes += 15)
+                {
+                    availableHours.Add($"{hour:D2}:{minutes:D2}");
+                }
+            }
+            return availableHours;
+        }
+
     }
 }

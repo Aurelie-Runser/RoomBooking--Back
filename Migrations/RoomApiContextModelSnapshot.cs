@@ -23,10 +23,7 @@ namespace ReservationDeSalle__Back.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("DateFrom")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("DateTo")
+                    b.Property<DateOnly>("Day")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Description")
@@ -44,6 +41,12 @@ namespace ReservationDeSalle__Back.Migrations
 
                     b.Property<string>("Statut")
                         .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<TimeOnly>("TimeFrom")
+                        .HasColumnType("TEXT");
+
+                    b.Property<TimeOnly>("TimeTo")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");

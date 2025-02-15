@@ -1,0 +1,4 @@
+bin/
+obj/
+room-booking.db-shm
+room-booking.db-wal

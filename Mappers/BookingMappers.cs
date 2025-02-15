@@ -28,10 +28,9 @@ namespace RoomBookingApi.Mappers
                 OrganizerFirstname = user?.Firstname ?? "Inconnu",
                 IdRoom = booking.IdRoom,
                 RoomName = room?.Name ?? "Inconnu",
-                DateFrom = booking.DateFrom,
-                DateFormat = booking.DateFrom.ToString("dd/MM/yyyy"),
-                TimeFromFormat = booking.DateFrom.ToString("HH:mm"),
-                TimeToFormat = booking.DateTo.ToString("HH:mm"),
+                Day = booking.Day,
+                TimeFrom = booking.TimeFrom,
+                TimeTo = booking.TimeTo,
                 Statut = booking.Statut,
                 GuestsName = guestNames!,
             };
