@@ -19,4 +19,14 @@ namespace RoomBookingApi.Models
         [Required]
         public int number { get; set; }
     }
+    
+    public class NewEquipment
+    {
+
+        [Required]
+        public string materiel { get; set; } = "";
+
+        [Required]
+        public int number { get; set; }
+    }
 }

@@ -117,6 +117,7 @@ namespace RoomBookingApi.Controllers
             newBooking.Statut = Status.AllowedStatus[0];
 
             _context.Bookings.Add(newBooking);
+
             _context.SaveChanges();
 
             var guests = BookingAdd.Guests;
@@ -222,7 +223,7 @@ namespace RoomBookingApi.Controllers
             _context.SaveChanges();
         }
 
-        private void AddEquipments(int bookingId, Equipment[] equipments)
+        private void AddEquipments(int bookingId, NewEquipment[] equipments)
         {
             foreach (var equipment in equipments)
             {

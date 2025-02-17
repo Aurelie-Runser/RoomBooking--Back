@@ -44,6 +44,7 @@ namespace RoomBookingApi.Models
         public string? OrganizerFirstname { get; set; }
         public string? OrganizerLastname { get; set; }
         public string[]? GuestsName { get; set; }
+        public Equipment[]? EquipmentsList { get; set; }
     }
 
     public record BookingUpdate
@@ -57,6 +58,6 @@ namespace RoomBookingApi.Models
 
         public int[]? Guests { get; set; }
 
-        public Equipment[]? Equipments { get; set; }
+        public NewEquipment[]? Equipments { get; set; }
     }
 }
