@@ -18,6 +18,17 @@ namespace RoomBookingApi.Mappers
                     .FirstOrDefault())
                 .ToList()
                 .ToArray();
+            
+            var equipments = _context.Equipments
+                .Where(eq => eq.IdBooking == booking.Id)
+                .Select(eq => new NewEquipment
+                    {
+                        materiel = eq.materiel,
+                        number = eq.number
+                    })
+                .ToList()
+                .ToArray();
+
 
             return new BookingDto
             {
@@ -33,6 +44,7 @@ namespace RoomBookingApi.Mappers
                 TimeTo = booking.TimeTo,
                 Statut = booking.Statut,
                 GuestsName = guestNames!,
+                EquipmentsList = equipments!,
             };
         }
     }

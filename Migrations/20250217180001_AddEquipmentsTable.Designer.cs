@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RoomBookingApi.Data;
 
@@ -10,9 +11,11 @@ using RoomBookingApi.Data;
 namespace ReservationDeSalle__Back.Migrations
 {
     [DbContext(typeof(RoomApiContext))]
-    partial class RoomApiContextModelSnapshot : ModelSnapshot
+    [Migration("20250217180001_AddEquipmentsTable")]
+    partial class AddEquipmentsTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.11");
@@ -187,7 +190,7 @@ namespace ReservationDeSalle__Back.Migrations
             modelBuilder.Entity("RoomBookingApi.Models.Equipment", b =>
                 {
                     b.HasOne("RoomBookingApi.Models.Booking", "Booking")
-                        .WithMany("Equipments")
+                        .WithMany()
                         .HasForeignKey("IdBooking")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -216,8 +219,6 @@ namespace ReservationDeSalle__Back.Migrations
 
             modelBuilder.Entity("RoomBookingApi.Models.Booking", b =>
                 {
-                    b.Navigation("Equipments");
-
                     b.Navigation("Guests");
                 });
 

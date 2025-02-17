@@ -117,20 +117,21 @@ namespace RoomBookingApi.Controllers
             newBooking.Statut = Status.AllowedStatus[0];
 
             _context.Bookings.Add(newBooking);
+
             _context.SaveChanges();
 
             var guests = BookingAdd.Guests;
 
             if (guests != null && guests.Length > 0)
             {
-                foreach(var guest in guests)
-                {
-                    _context.Guests.Add(new Guest 
-                    {
-                        IdBooking = newBooking.Id,
-                        IdUser = guest
-                    });
-                }
+                AddGuests(newBooking.Id, guests);
+            }
+
+            var equipments = BookingAdd.Equipments;
+
+            if (equipments != null && equipments.Length > 0)
+            {
+                AddEquipments(newBooking.Id, equipments);
             }
 
             _context.SaveChanges();
@@ -206,6 +207,35 @@ namespace RoomBookingApi.Controllers
                 }
             }
             return availableHours;
+        }
+
+        private void AddGuests(int bookingId, int[] guestIds)
+        {
+            foreach (var guestId in guestIds)
+            {
+                _context.Guests.Add(new Guest
+                {
+                    IdBooking = bookingId,
+                    IdUser = guestId
+                });
+            }
+
+            _context.SaveChanges();
+        }
+
+        private void AddEquipments(int bookingId, NewEquipment[] equipments)
+        {
+            foreach (var equipment in equipments)
+            {
+                _context.Equipments.Add(new Equipment
+                {
+                    IdBooking = bookingId,
+                    materiel = equipment.materiel,
+                    number = equipment.number
+                });
+            }
+
+            _context.SaveChanges();
         }
 
     }
