@@ -56,5 +56,7 @@ namespace RoomBookingApi.Models
         public required string Token { get; set; }
 
         public int[]? Guests { get; set; }
+
+        public Equipment[]? Equipments { get; set; }
     }
 }

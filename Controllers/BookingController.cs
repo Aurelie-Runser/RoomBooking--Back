@@ -126,6 +126,13 @@ namespace RoomBookingApi.Controllers
                 AddGuests(newBooking.Id, guests);
             }
 
+            var equipments = BookingAdd.Equipments;
+
+            if (equipments != null && equipments.Length > 0)
+            {
+                AddEquipments(newBooking.Id, equipments);
+            }
+
             _context.SaveChanges();
             return Created(nameof(AddBooking), new { Id = newBooking.Id });
         }
@@ -201,7 +208,6 @@ namespace RoomBookingApi.Controllers
             return availableHours;
         }
 
-
         private void AddGuests(int bookingId, int[] guestIds)
         {
             foreach (var guestId in guestIds)
@@ -210,6 +216,21 @@ namespace RoomBookingApi.Controllers
                 {
                     IdBooking = bookingId,
                     IdUser = guestId
+                });
+            }
+
+            _context.SaveChanges();
+        }
+
+        private void AddEquipments(int bookingId, Equipment[] equipments)
+        {
+            foreach (var equipment in equipments)
+            {
+                _context.Equipments.Add(new Equipment
+                {
+                    IdBooking = bookingId,
+                    materiel = equipment.materiel,
+                    number = equipment.number
                 });
             }
 
