@@ -21,6 +21,11 @@ namespace RoomBookingApi.Mappers
             
             var equipments = _context.Equipments
                 .Where(eq => eq.IdBooking == booking.Id)
+                .Select(eq => new NewEquipment
+                    {
+                        materiel = eq.materiel,
+                        number = eq.number
+                    })
                 .ToList()
                 .ToArray();
 
