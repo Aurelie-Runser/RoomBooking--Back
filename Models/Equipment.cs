@@ -17,6 +17,7 @@ namespace RoomBookingApi.Models
         public string materiel { get; set; } = "";
 
         [Required]
+        [Range(0, 1000)]
         public int number { get; set; }
     }
     
@@ -27,6 +28,7 @@ namespace RoomBookingApi.Models
         public string materiel { get; set; } = "";
 
         [Required]
+        [Range(0, 1000)]
         public int number { get; set; }
     }
 }
