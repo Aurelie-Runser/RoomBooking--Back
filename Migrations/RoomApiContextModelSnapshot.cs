@@ -132,9 +132,8 @@ namespace ReservationDeSalle__Back.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Picture")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<byte[]>("Picture")
+                        .HasColumnType("BLOB");
 
                     b.Property<string>("Surface")
                         .IsRequired()
@@ -187,7 +186,7 @@ namespace ReservationDeSalle__Back.Migrations
             modelBuilder.Entity("RoomBookingApi.Models.Equipment", b =>
                 {
                     b.HasOne("RoomBookingApi.Models.Booking", "Booking")
-                        .WithMany("Equipments")
+                        .WithMany()
                         .HasForeignKey("IdBooking")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -216,8 +215,6 @@ namespace ReservationDeSalle__Back.Migrations
 
             modelBuilder.Entity("RoomBookingApi.Models.Booking", b =>
                 {
-                    b.Navigation("Equipments");
-
                     b.Navigation("Guests");
                 });
 
