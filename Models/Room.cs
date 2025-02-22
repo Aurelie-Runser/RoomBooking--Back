@@ -52,7 +52,7 @@ namespace RoomBookingApi.Models
         [Required]
         public required string Token { get; set; }
 
-        public required string PictureFile { get; set; }
+        public string? PictureFile { get; set; }
 
     }
 
