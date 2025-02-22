@@ -94,6 +94,7 @@ namespace RoomBookingApi.Controllers
 
             var newRoom = RoomUpdate.NewRoom;
             var token = RoomUpdate.Token;
+            var pictureFile = RoomUpdate.PictureFile;
 
             var userId = _jwtTokenService.GetUserIdFromToken(token);
 
@@ -124,6 +125,10 @@ namespace RoomBookingApi.Controllers
 
                 if (!object.Equals(newValue, oldValue))
                 {
+                    if(property.Name == "Picture" && !string.IsNullOrEmpty(pictureFile)) {
+                        newValue = Convert.FromBase64String(pictureFile);
+                    }
+                    
                     property.SetValue(oldRoom, newValue);
                 }
             }
