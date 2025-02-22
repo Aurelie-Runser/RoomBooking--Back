@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using RoomBookingApi.Data;
 using RoomBookingApi.Models;
 using RoomBookingApi.Services;
+using RoomBookingApi.Mappers;
 using RoomBookingApi.Validations;
 
 namespace RoomBookingApi.Controllers
@@ -33,14 +34,24 @@ namespace RoomBookingApi.Controllers
         public ActionResult<IEnumerable<Room>> GetRooms()
         {
             _logger.LogInformation("Get all rooms");
-            return Ok(_context.Rooms);
+
+            var rooms = _context.Rooms;
+
+            var roomDtos = rooms.ToDto();
+
+            return Ok(roomDtos);
         }
 
         [HttpGet("{Id}")]
-        public ActionResult<Room> GetRoomById(int id)
+        public ActionResult<RoomDto> GetRoomById(int id)
         {
             _logger.LogInformation($"Get room {id}");
-            return Ok(_context.Rooms.FirstOrDefault(room => room.Id == id));
+
+            var room = _context.Rooms.FirstOrDefault(room => room.Id == id);
+
+            var roomDto = RoomExtensions.ToDto(room);
+
+            return Ok(roomDto);
         }
 
         [HttpPost]
@@ -50,6 +61,7 @@ namespace RoomBookingApi.Controllers
 
             var newRoom = RoomAdd.NewRoom;
             var token = RoomAdd.Token;
+            var pictureFile = RoomAdd.PictureFile;
 
             var userId = _jwtTokenService.GetUserIdFromToken(token);
 
@@ -64,6 +76,12 @@ namespace RoomBookingApi.Controllers
             {
                 return Unauthorized(new { Message = "Vous n'avez pas le droit pour ajouter une salle." });
             }
+
+            if (!string.IsNullOrEmpty(pictureFile))
+            {
+                newRoom.Picture = Convert.FromBase64String(pictureFile);
+            }
+                        
             _context.Rooms.Add(newRoom);
             _context.SaveChanges();
             return Created(nameof(AddRoom), new { Id = newRoom.Id });
