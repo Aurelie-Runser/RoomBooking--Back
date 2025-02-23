@@ -461,3 +461,7 @@ C:/Users/Aurélie/Desktop/Ynov/WebFullStack/ProjetGroupe/Code/RoomBooking--Back/
 /Users/alixan/Desktop/Projets/roombooking-api/obj/Debug/net8.0/RoomBookingApi.pdb
 /Users/alixan/Desktop/Projets/roombooking-api/obj/Debug/net8.0/RoomBookingApi.genruntimeconfig.cache
 /Users/alixan/Desktop/Projets/roombooking-api/obj/Debug/net8.0/ref/RoomBookingApi.dll
+/Users/alixan/Desktop/Projets/roombooking-api/bin/Debug/net8.0/CsvHelper.dll
+/Users/alixan/Desktop/Projets/roombooking-api/bin/Debug/net8.0/Ical.Net.dll
+/Users/alixan/Desktop/Projets/roombooking-api/bin/Debug/net8.0/NodaTime.dll
+/Users/alixan/Desktop/Projets/roombooking-api/bin/Debug/net8.0/System.Linq.Async.dll

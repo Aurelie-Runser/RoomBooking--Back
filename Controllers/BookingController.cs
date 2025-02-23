@@ -6,6 +6,8 @@ using RoomBookingApi.Services;
 using RoomBookingApi.Mappers;
 using RoomBookingApi.Validations;
 using Microsoft.EntityFrameworkCore;
+using System.Text;
+using RoomBookingApi.Utils;
 
 namespace RoomBookingApi.Controllers
 {
@@ -157,6 +159,48 @@ namespace RoomBookingApi.Controllers
             _logger.LogInformation($"DTO bookings count: {bookingDtos.Count}");
 
             return Ok(bookingDtos);
+        }
+
+        [HttpGet("export/csv")]
+        public ActionResult ExportToCsv()
+        {
+            var bookings = _context.Bookings
+                .Include(b => b.Guests)
+                .Select(b => b.ToDto(_context))
+                .ToList();
+
+            var csvContent = BookingExporter.ExportToCsv(bookings);
+            var bytes = Encoding.UTF8.GetBytes(csvContent);
+
+            return File(bytes, "text/csv", "reservations.csv");
+        }
+
+        [HttpGet("export/ical")]
+        public ActionResult ExportToICalendar()
+        {
+            var bookings = _context.Bookings
+                .Include(b => b.Guests)
+                .Select(b => b.ToDto(_context))
+                .ToList();
+
+            var icalContent = BookingExporter.ExportToCalendar(bookings);
+            var bytes = Encoding.UTF8.GetBytes(icalContent);
+
+            return File(bytes, "text/calendar", "reservations.ics");
+        }
+
+        [HttpGet("export/cal")]
+        public ActionResult ExportToCalendar()
+        {
+            var bookings = _context.Bookings
+                .Include(b => b.Guests)
+                .Select(b => b.ToDto(_context))
+                .ToList();
+
+            var calContent = BookingExporter.ExportToCalendar(bookings);
+            var bytes = Encoding.UTF8.GetBytes(calContent);
+
+            return File(bytes, "text/calendar", "reservations.cal");
         }
     }
 }
