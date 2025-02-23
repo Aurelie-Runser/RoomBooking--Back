@@ -6,6 +6,8 @@ using Ical.Net.Serialization;
 using CsvHelper;
 using System.Globalization;
 using RoomBookingApi.Models;
+using OfficeOpenXml;
+using System.Drawing;
 
 namespace RoomBookingApi.Utils
 {
@@ -90,6 +92,43 @@ namespace RoomBookingApi.Utils
 
             calBuilder.AppendLine("END:VCALENDAR");
             return calBuilder.ToString();
+        }
+
+        public static byte[] ExportToExcel(IEnumerable<BookingDto> bookings)
+        {
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            
+            using var package = new ExcelPackage();
+            var worksheet = package.Workbook.Worksheets.Add("Réservations");
+
+            var headers = new[] { "Nom", "Description", "Salle", "Organisateur", "Date de début", "Date de fin", "Statut", "Invités" };
+            worksheet.Cells["A1:H1"].LoadFromArrays(new[] { headers });
+
+            var row = 2;
+            foreach (var booking in bookings)
+            {
+                var rowData = new object[]
+                {
+                    booking.Name,
+                    booking.Description ?? "",
+                    booking.RoomName ?? "N/A",
+                    $"{booking.OrganizerFirstname} {booking.OrganizerLastname}",
+                    booking.DateFrom.ToString("dd/MM/yyyy HH:mm"),
+                    booking.DateTo.ToString("dd/MM/yyyy HH:mm"),
+                    booking.Statut,
+                    string.Join(", ", booking.GuestsName ?? Array.Empty<string>())
+                };
+                
+                worksheet.Cells[row, 1, row, 8].LoadFromArrays(new[] { rowData });
+                row++;
+            }
+
+            worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
+            worksheet.Cells["A1:H1"].Style.Font.Bold = true;
+            worksheet.Cells["A1:H1"].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+            worksheet.Cells["A1:H1"].Style.Fill.BackgroundColor.SetColor(Color.LightGray);
+
+            return package.GetAsByteArray();
         }
     }
 } 

@@ -202,5 +202,17 @@ namespace RoomBookingApi.Controllers
 
             return File(bytes, "text/calendar", "reservations.cal");
         }
+
+        [HttpGet("export/xlsx")]
+        public ActionResult ExportToExcel()
+        {
+            var bookings = _context.Bookings
+                .Include(b => b.Guests)
+                .Select(b => b.ToDto(_context))
+                .ToList();
+
+            var excelBytes = BookingExporter.ExportToExcel(bookings);
+            return File(excelBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "reservations.xlsx");
+        }
     }
 }
