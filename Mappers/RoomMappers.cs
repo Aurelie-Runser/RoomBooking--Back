@@ -11,7 +11,7 @@ namespace RoomBookingApi.Mappers
             {
                 Id = room.Id,
                 Name = room.Name,
-                PictureUrl = Convert.ToBase64String(room.Picture) ?? null,
+                PictureUrl = room?.Picture != null ? Convert.ToBase64String(room.Picture) : null,
                 Adress = room.Adress,
                 AdressComplements = room.AdressComplements,
                 Groupe = room.Groupe,

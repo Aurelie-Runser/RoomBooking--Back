@@ -213,7 +213,7 @@ namespace RoomBookingApi.Controllers
 
                 if (!object.Equals(oldUser.Role, user.Role))
                 {
-                    if(user.Id == userConnect.Id) return Unauthorized(new { Message = "Vous ne pouvez pas modifier votre propre rôle." });
+                    if(user.Id == userConnect.Id) return Unauthorized(new { Message = "Vous ne pouvez pas modifier votre propre rôle. Aucun de vos changements n'a été pris en compte." });
 
                     oldUser.Role = user.Role;
                 }
