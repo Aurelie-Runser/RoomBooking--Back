@@ -38,6 +38,36 @@ namespace RoomBookingApi.Controllers
             return Ok(users);
         }
 
+        [HttpGet("admin-view/{token}")]
+        public ActionResult<IEnumerable<UserBase>> GetUsersAdmin(string token)
+        {
+            var userId = _jwtTokenService.GetUserIdFromToken(token);
+
+            var user = _context.Users.FirstOrDefault(u => u.Id == userId);
+            if (user == null)
+            {
+                return NotFound(new { Message = "Token invalide ou utilisateur introuvable." });
+            }
+
+            var isUserAdmin = user.IsAdmin();
+            if (!isUserAdmin)
+            {
+                return Unauthorized(new { Message = "Vous n'avez pas les droits administrateurs." });
+            }
+
+            var users = _context.Users
+                .Select(u => new UserBase
+                {
+                    Id = u.Id,
+                    Lastname = u.Lastname,
+                    Firstname = u.Firstname,
+                    Role = u.Role
+                })
+                .ToList();
+
+            return Ok(users);
+        }
+
         [HttpGet("{Id}")]
         public ActionResult<User> GetUserById(int id)
         {
