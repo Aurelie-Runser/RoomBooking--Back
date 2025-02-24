@@ -44,4 +44,19 @@ namespace RoomBookingApi.Models
     public record UserDto : UserBase
     {
     }
+
+    public record UserForAdmin
+    {
+        [Required]
+        public int Id { get; set; }
+
+        [Required]
+        public string Lastname { get; set; } = string.Empty;
+
+        public string Firstname { get; set; } = string.Empty;
+
+        [Required]
+        [RoleValidation]
+        public required string Role { get; set; }
+    }
 }
