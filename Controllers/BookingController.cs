@@ -107,24 +107,33 @@ namespace RoomBookingApi.Controllers
                 return NotFound(new { Message = "Cette salle n'existe pas." });
             }
 
+            var TimeFrom = TimeOnly.Parse(newBooking.TimeFrom);
+            var TimeTo = TimeOnly.Parse(newBooking.TimeTo);
+
+            if ((newBooking.Day < DateOnly.FromDateTime(DateTime.Now) && TimeFrom < TimeOnly.FromDateTime(DateTime.Now)) || TimeFrom > TimeTo)
+            {
+                return BadRequest(new { Message = "Veuillez renseigner une date future." });
+            }
+
             newBooking.IdOrganizer = userId;
             newBooking.Statut = Status.AllowedStatus[0];
 
             _context.Bookings.Add(newBooking);
+
             _context.SaveChanges();
 
             var guests = BookingAdd.Guests;
 
             if (guests != null && guests.Length > 0)
             {
-                foreach(var guest in guests)
-                {
-                    _context.Guests.Add(new Guest 
-                    {
-                        IdBooking = newBooking.Id,
-                        IdUser = guest
-                    });
-                }
+                AddGuests(newBooking.Id, guests);
+            }
+
+            var equipments = BookingAdd.Equipments;
+
+            if (equipments != null && equipments.Length > 0)
+            {
+                AddEquipments(newBooking.Id, equipments);
             }
 
             _context.SaveChanges();
@@ -137,6 +146,7 @@ namespace RoomBookingApi.Controllers
             _logger.LogInformation($"Get bookings for room {roomId}");
 
             var room = _context.Rooms.FirstOrDefault(r => r.Id == roomId);
+
             if (room == null)
             {
                 _logger.LogWarning($"Room {roomId} not found");
@@ -149,7 +159,7 @@ namespace RoomBookingApi.Controllers
                 .Include(b => b.Guests)
                 .Where(b => b.IdRoom == roomId)
                 .ToList();
-
+                
             _logger.LogInformation($"Raw bookings count: {bookings.Count}");
 
             var bookingDtos = bookings
@@ -214,5 +224,75 @@ namespace RoomBookingApi.Controllers
             var excelBytes = BookingExporter.ExportToExcel(bookings);
             return File(excelBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "reservations.xlsx");
         }
+
+        [HttpGet("available-start-hours")]
+        public ActionResult<IEnumerable<string>> GetAvailableStartHours([FromQuery] int roomId, [FromQuery] string date)
+        {
+            _logger.LogInformation($"Vérifie les heures disponibles pour la salle {roomId} le {date}");
+
+            if (!DateOnly.TryParse(date, out DateOnly selectedDate))
+            {
+                return BadRequest("Format de date invalide");
+            }
+
+            List<string> availableHours = GenerateAvailableHours();
+
+            var bookedSlots = _context.Bookings
+                .Where(b => b.IdRoom == roomId && b.Day == selectedDate)
+                .ToList();
+
+            var availableStartHours = availableHours
+                .Where(time =>
+                {
+                    var parsedTime = TimeOnly.Parse(time);
+                    return !bookedSlots.Any(slot => parsedTime >= TimeOnly.Parse(slot.TimeFrom) && parsedTime < TimeOnly.Parse(slot.TimeTo));
+                })
+                .ToList();
+                
+            return Ok(availableStartHours);
+        }
+
+        private List<string> GenerateAvailableHours()
+        {
+            var availableHours = new List<string>();
+            for (int hour = 7; hour <= 23; hour++)
+            {
+                for (int minutes = 0; minutes < 60; minutes += 15)
+                {
+                    availableHours.Add($"{hour:D2}:{minutes:D2}");
+                }
+            }
+            return availableHours;
+        }
+
+        private void AddGuests(int bookingId, int[] guestIds)
+        {
+            foreach (var guestId in guestIds)
+            {
+                _context.Guests.Add(new Guest
+                {
+                    IdBooking = bookingId,
+                    IdUser = guestId
+                });
+            }
+
+            _context.SaveChanges();
+        }
+
+        private void AddEquipments(int bookingId, NewEquipment[] equipments)
+        {
+            foreach (var equipment in equipments)
+            {
+                _context.Equipments.Add(new Equipment
+                {
+                    IdBooking = bookingId,
+                    materiel = equipment.materiel,
+                    number = equipment.number
+                });
+            }
+
+            _context.SaveChanges();
+        }
+
     }
 }

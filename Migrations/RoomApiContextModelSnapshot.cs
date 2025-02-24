@@ -23,10 +23,7 @@ namespace ReservationDeSalle__Back.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("DateFrom")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("DateTo")
+                    b.Property<DateOnly>("Day")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Description")
@@ -46,9 +43,40 @@ namespace ReservationDeSalle__Back.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("TimeFrom")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("TimeTo")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
                     b.ToTable("Bookings");
+                });
+
+            modelBuilder.Entity("RoomBookingApi.Models.Equipment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("IdBooking")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("materiel")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("number")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdBooking");
+
+                    b.ToTable("Equipments");
                 });
 
             modelBuilder.Entity("RoomBookingApi.Models.Guest", b =>
@@ -104,9 +132,8 @@ namespace ReservationDeSalle__Back.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Picture")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<byte[]>("Picture")
+                        .HasColumnType("BLOB");
 
                     b.Property<string>("Surface")
                         .IsRequired()
@@ -154,6 +181,17 @@ namespace ReservationDeSalle__Back.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("RoomBookingApi.Models.Equipment", b =>
+                {
+                    b.HasOne("RoomBookingApi.Models.Booking", "Booking")
+                        .WithMany()
+                        .HasForeignKey("IdBooking")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Booking");
                 });
 
             modelBuilder.Entity("RoomBookingApi.Models.Guest", b =>

@@ -15,7 +15,7 @@ namespace RoomBookingApi.Models
         [StringLength(50)]
         public string Name { get; set; } = string.Empty;
 
-        public string Picture { get; set; } = string.Empty;
+        public byte[]? Picture { get; set; }
 
         [Required]
         public string Adress { get; set; } = string.Empty;
@@ -38,6 +38,11 @@ namespace RoomBookingApi.Models
         public string Surface { get; set; } = string.Empty; // intérieur et/ou exterieur
     }
 
+    public record RoomDto : Room
+    {
+        public required string PictureUrl { get; set; }
+    }
+
     public record RoomUpdate
     {
 
@@ -46,6 +51,8 @@ namespace RoomBookingApi.Models
 
         [Required]
         public required string Token { get; set; }
+
+        public string? PictureFile { get; set; }
 
     }
 
