@@ -24,8 +24,9 @@ namespace RoomBookingApi.Utils
                 b.Description,
                 RoomName = b.RoomName ?? "N/A",
                 Organizer = $"{b.OrganizerFirstname} {b.OrganizerLastname}",
-                b.DateFrom,
-                b.DateTo,
+                b.Day,
+                b.TimeFrom,
+                b.TimeTo,
                 b.Statut,
                 Guests = string.Join(";", b.GuestsName ?? Array.Empty<string>())
             }));
@@ -40,13 +41,19 @@ namespace RoomBookingApi.Utils
 
             foreach (var booking in bookings)
             {
+                TimeOnly timeFrom = TimeOnly.ParseExact(booking.TimeFrom, "HH:mm", CultureInfo.InvariantCulture);
+                TimeOnly timeTom = TimeOnly.ParseExact(booking.TimeTo, "HH:mm", CultureInfo.InvariantCulture);
+                
+                DateTime startDate = booking.Day.ToDateTime(timeFrom);
+                DateTime endDate = booking.Day.ToDateTime(timeTom);
+
                 var calEvent = new CalendarEvent
                 {
                     Summary = booking.Name,
                     Description = booking.Description ?? string.Empty,
                     Location = booking.RoomName ?? "N/A",
-                    Start = new CalDateTime(booking.DateFrom),
-                    End = new CalDateTime(booking.DateTo),
+                    Start =  new CalDateTime(startDate),
+                    End = new CalDateTime(endDate),
                     Organizer = new Organizer($"{booking.OrganizerFirstname} {booking.OrganizerLastname}")
                 };
 
@@ -61,7 +68,6 @@ namespace RoomBookingApi.Utils
             var serializer = new CalendarSerializer();
             return serializer.SerializeToString(calendar);
         }
-
         public static string ExportToCalendar(IEnumerable<BookingDto> bookings)
         {
             var calBuilder = new StringBuilder();
@@ -71,12 +77,18 @@ namespace RoomBookingApi.Utils
 
             foreach (var booking in bookings)
             {
+                TimeOnly timeFrom = TimeOnly.ParseExact(booking.TimeFrom, "HH:mm", CultureInfo.InvariantCulture);
+                TimeOnly timeTom = TimeOnly.ParseExact(booking.TimeTo, "HH:mm", CultureInfo.InvariantCulture);
+                
+                DateTime startDate = booking.Day.ToDateTime(timeFrom);
+                DateTime endDate = booking.Day.ToDateTime(timeTom);
+
                 calBuilder.AppendLine("BEGIN:VEVENT");
                 calBuilder.AppendLine($"SUMMARY:{booking.Name}");
                 calBuilder.AppendLine($"LOCATION:{booking.RoomName}");
                 calBuilder.AppendLine($"DESCRIPTION:{booking.Description ?? ""}");
-                calBuilder.AppendLine($"DTSTART:{booking.DateFrom:yyyyMMddTHHmmss}");
-                calBuilder.AppendLine($"DTEND:{booking.DateTo:yyyyMMddTHHmmss}");
+                calBuilder.AppendLine($"DTSTART:{startDate:yyyyMMddTHHmmss}");
+                calBuilder.AppendLine($"DTEND:{endDate:yyyyMMddTHHmmss}");
                 calBuilder.AppendLine($"ORGANIZER;CN={booking.OrganizerFirstname} {booking.OrganizerLastname}");
                 
                 if (booking.GuestsName?.Any() == true)
@@ -107,14 +119,20 @@ namespace RoomBookingApi.Utils
             var row = 2;
             foreach (var booking in bookings)
             {
+                TimeOnly timeFrom = TimeOnly.ParseExact(booking.TimeFrom, "HH:mm", CultureInfo.InvariantCulture);
+                TimeOnly timeTom = TimeOnly.ParseExact(booking.TimeTo, "HH:mm", CultureInfo.InvariantCulture);
+                
+                DateTime startDate = booking.Day.ToDateTime(timeFrom);
+                DateTime endDate = booking.Day.ToDateTime(timeTom);
+
                 var rowData = new object[]
                 {
                     booking.Name,
                     booking.Description ?? "",
                     booking.RoomName ?? "N/A",
                     $"{booking.OrganizerFirstname} {booking.OrganizerLastname}",
-                    booking.DateFrom.ToString("dd/MM/yyyy HH:mm"),
-                    booking.DateTo.ToString("dd/MM/yyyy HH:mm"),
+                    startDate.ToString("dd/MM/yyyy HH:mm"),
+                    endDate.ToString("dd/MM/yyyy HH:mm"),
                     booking.Statut,
                     string.Join(", ", booking.GuestsName ?? Array.Empty<string>())
                 };
