@@ -49,6 +49,8 @@ namespace RoomBookingApi.Controllers
 
             var room = _context.Rooms.FirstOrDefault(room => room.Id == id);
 
+            if (room == null) return NotFound(new { Message = $"Room with ID {id} not found" });
+
             var roomDto = RoomExtensions.ToDto(room);
 
             return Ok(roomDto);
@@ -123,12 +125,13 @@ namespace RoomBookingApi.Controllers
                 var oldValue = property.GetValue(oldRoom);
                 var newValue = property.GetValue(newRoom);
 
-                if (!object.Equals(newValue, oldValue))
+                if(property.Name == "Picture" && !string.IsNullOrEmpty(pictureFile)) {
+                    newValue = Convert.FromBase64String(pictureFile);
+                    property.SetValue(oldRoom, newValue);
+                }
+
+                else if (!object.Equals(newValue, oldValue) && property.Name != "Picture")
                 {
-                    if(property.Name == "Picture" && !string.IsNullOrEmpty(pictureFile)) {
-                        newValue = Convert.FromBase64String(pictureFile);
-                    }
-                    
                     property.SetValue(oldRoom, newValue);
                 }
             }

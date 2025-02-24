@@ -41,7 +41,7 @@ Content-Type: application/json
     "NewRoom":
     {
         "Name": "salle 2",
-        "Picture": "room2_small",
+        "Picture": null,
         "Adress": "19 rue de Lacroix",
         "AdressComplements": "2ème porte à droite",
         "Groupe": "Grande Réunion",
@@ -50,7 +50,8 @@ Content-Type: application/json
         "IsAccessible": true,
         "Surface": "interieur et exterieur"
     },
-    "Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIyIiwiZW1haWwiOiJhdXJlbGllLnJ1bnNlcjI1QGdtYWlsLmNvbSIsIm5iZiI6MTczOTgxNTQ0MiwiZXhwIjoxNzM5OTAxODQyLCJpYXQiOjE3Mzk4MTU0NDJ9.jQB6phxyUZcQJvxTFbVVC0dkFt1XffeOw_y9jfJM_10"
+    "Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIyIiwiZW1haWwiOiJhdXJlbGllLnJ1bnNlcjI1QGdtYWlsLmNvbSIsIm5iZiI6MTc0MDQwNDM4OCwiZXhwIjoxNzQwNDkwNzg4LCJpYXQiOjE3NDA0MDQzODh9.uByOm96phr9WyvtJaae6lW_fOlXM6nER9hSb0ufJXCE",
+    "PictureFile": null
 }
 
 ###
