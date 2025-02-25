@@ -163,12 +163,12 @@ namespace RoomBookingApi.Controllers
         }
 
         [HttpPut]
-        public ActionResult<object> UpdateBooking([FromBody] BookingUpdate BookingAdd)
+        public ActionResult<object> UpdateBooking([FromBody] BookingUpdate BookingUpdate)
         {
-            _logger.LogInformation($"Update booking {BookingAdd.NewBooking.Id}");
+            _logger.LogInformation($"Update booking {BookingUpdate.NewBooking.Id}");
 
-            var newBooking = BookingAdd.NewBooking;
-            var token = BookingAdd.Token;
+            var newBooking = BookingUpdate.NewBooking;
+            var token = BookingUpdate.Token;
 
             var userId = _jwtTokenService.GetUserIdFromToken(token) ?? 0;
             if (userId != newBooking.IdOrganizer)
@@ -186,6 +186,11 @@ namespace RoomBookingApi.Controllers
             if (oldBooking == null)
             {
                 return NotFound(new { Message = "Cette salle n'existe pas." });
+            }
+
+            if (newBooking.Statut == Status.AllowedStatus[1])
+            {
+                return BadRequest(new { Message = "Cette réunion est censée être terminée, vous ne pouvez plus la modifier." });
             }
 
             var currentDate = DateOnly.FromDateTime(DateTime.Now);
@@ -214,17 +219,15 @@ namespace RoomBookingApi.Controllers
                 }
             }
 
-            // var guests = BookingAdd.Guests;
-            // if (guests != null && guests.Length > 0)
-            // {
-            //     UpdateGuests(booking.Id, guests);
-            // }
-
-            var equipments = BookingAdd.Equipments;
-            if (equipments != null && equipments.Length > 0)
+            var guests = BookingUpdate.Guests;
+            if (guests == null || guests.Length == 0)
             {
-                UpdateEquipments(oldBooking.Id, equipments);
+                return BadRequest(new { Message = "Veuillez inviter au moins 1 personne." });
             }
+            UpdateGuests(oldBooking.Id, guests);
+
+            var equipments = BookingUpdate.Equipments;
+            UpdateEquipments(oldBooking.Id, equipments);
 
             _context.SaveChanges();
             return Ok(new { Message = "Vaux modifications ont été enregistrées avec succès" });
@@ -404,6 +407,32 @@ namespace RoomBookingApi.Controllers
             _context.SaveChanges();
         }
 
+        private void UpdateGuests(int bookingId, int[] guestIds)
+        {
+            var currentGuests = _context.Guests
+                .Where(g => g.IdBooking == bookingId)
+                .ToList();
+
+            var guestsToRemove = currentGuests
+                .Where(g => !guestIds.Contains(g.IdUser))
+                .ToList();
+
+            _context.Guests.RemoveRange(guestsToRemove);
+
+            var guestsToAdd = guestIds
+                .Where(guestId => !currentGuests.Any(g => g.IdUser == guestId))
+                .Select(guestId => new Guest
+                {
+                    IdBooking = bookingId,
+                    IdUser = guestId
+                })
+                .ToList();
+
+            _context.Guests.AddRange(guestsToAdd);
+
+            _context.SaveChanges();
+        }
+
         private void AddEquipments(int bookingId, NewEquipment[] equipments)
         {
             foreach (var equipment in equipments)
@@ -419,36 +448,43 @@ namespace RoomBookingApi.Controllers
             _context.SaveChanges();
         }
 
-        private void UpdateEquipments(int bookingId, NewEquipment[] equipments)
+        private void UpdateEquipments(int bookingId, NewEquipment[]? equipments)
         {
             var oldEquipments = _context.Equipments
                 .Where(e => e.IdBooking == bookingId)
                 .ToList();
-
-            foreach (var newEquipment in equipments)
+            
+            if(equipments == null || equipments.Length == 0)
             {
-                var existingEquipment = oldEquipments
-                    .FirstOrDefault(e => e.materiel == newEquipment.materiel);
-
-                if (existingEquipment != null)
-                {
-                    existingEquipment.number = newEquipment.number;
-                    oldEquipments.Remove(existingEquipment);
-                }
-                else
-                {
-                    _context.Equipments.Add(new Equipment
-                    {
-                        IdBooking = bookingId,
-                        materiel = newEquipment.materiel,
-                        number = newEquipment.number
-                    });
-                }
+                _context.Equipments.RemoveRange(oldEquipments);
             }
-
-            foreach (var equipmentToDelete in oldEquipments)
+            else
             {
-                _context.Equipments.Remove(equipmentToDelete);
+                foreach (var newEquipment in equipments)
+                {
+                    var existingEquipment = oldEquipments
+                        .FirstOrDefault(e => e.materiel == newEquipment.materiel);
+
+                    if (existingEquipment != null)
+                    {
+                        existingEquipment.number = newEquipment.number;
+                        oldEquipments.Remove(existingEquipment);
+                    }
+                    else
+                    {
+                        _context.Equipments.Add(new Equipment
+                        {
+                            IdBooking = bookingId,
+                            materiel = newEquipment.materiel,
+                            number = newEquipment.number
+                        });
+                    }
+                }
+
+                foreach (var equipmentToDelete in oldEquipments)
+                {
+                    _context.Equipments.Remove(equipmentToDelete);
+                }
             }
 
             _context.SaveChanges();

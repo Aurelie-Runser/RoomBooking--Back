@@ -11,13 +11,22 @@ namespace RoomBookingApi.Mappers
             var user = _context.Users.FirstOrDefault(u => u.Id == booking.IdOrganizer);
             var room = _context.Rooms.FirstOrDefault(r => r.Id == booking.IdRoom);
             
-            var guestNames = booking.Guests
+            var guestName = booking.Guests
                 .Select(g => _context.Users
                     .Where(u => u.Id == g.IdUser)
                     .Select(u => $"{u.Firstname} {u.Lastname}")
                     .FirstOrDefault())
                 .ToList()
                 .ToArray();
+
+            var guestId = booking.Guests
+                .Select(g => _context.Users
+                    .Where(u => u.Id == g.IdUser)
+                    .Select(u => u.Id)
+                    .FirstOrDefault())
+                .ToList()
+                .ToArray();
+
             
             var equipments = _context.Equipments
                 .Where(eq => eq.IdBooking == booking.Id)
@@ -44,7 +53,8 @@ namespace RoomBookingApi.Mappers
                 TimeFrom = booking.TimeFrom,
                 TimeTo = booking.TimeTo,
                 Statut = booking.Statut,
-                GuestsName = guestNames!,
+                GuestsId = guestId!,
+                GuestsName = guestName!,
                 EquipmentsList = equipments!,
             };
         }
