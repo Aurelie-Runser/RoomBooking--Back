@@ -40,7 +40,7 @@ namespace RoomBookingApi.Models
 
     public record RoomDto : Room
     {
-        public required string PictureUrl { get; set; }
+        public string? PictureUrl { get; set; }
     }
 
     public record RoomUpdate

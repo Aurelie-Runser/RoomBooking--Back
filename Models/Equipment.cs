@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using RoomBookingApi.Validations;
 
 namespace RoomBookingApi.Models
 {
@@ -14,6 +15,7 @@ namespace RoomBookingApi.Models
         public Booking Booking { get; set; } = null!;
 
         [Required]
+        [EquipmentValidation]
         public string materiel { get; set; } = "";
 
         [Required]
@@ -25,6 +27,7 @@ namespace RoomBookingApi.Models
     {
 
         [Required]
+        [EquipmentValidation]
         public string materiel { get; set; } = "";
 
         [Required]

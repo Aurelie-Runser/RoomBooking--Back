@@ -48,22 +48,39 @@ namespace RoomBookingApi.Controllers
                 return BadRequest(new { Message = "Token invalide ou utilisateur introuvable." });
             }
 
+            var currentDateTime = DateTime.Now;
+
             var bookingsAsOrganizer = _context.Bookings
                 .Where(b => b.IdOrganizer == userId)
-                .Select(b => BookingExtensions.ToDto(b, _context))
                 .ToList();
 
             var bookingsAsGuest = _context.Bookings
                 .Where(b => b.Guests.Any(g => g.IdUser == userId))
-                .Select(b => BookingExtensions.ToDto(b, _context))
                 .ToList();
 
-            var allBookings = bookingsAsOrganizer
-                .Concat(bookingsAsGuest)
-                .Distinct()
+            var allBookings = bookingsAsOrganizer.Concat(bookingsAsGuest).Distinct().ToList();
+
+            foreach (var booking in allBookings)
+            {
+                if (booking.Statut != Status.AllowedStatus[1] && TimeOnly.TryParse(booking.TimeTo, out TimeOnly endTime))
+                {
+                    DateTime bookingEndTime = booking.Day.ToDateTime(endTime);
+
+                    if (bookingEndTime < currentDateTime)
+                    {
+                        booking.Statut = Status.AllowedStatus[1];
+                    }
+                }
+            }
+
+            _logger.LogInformation("Bookings Statut updtae successfully");
+            _context.SaveChanges();
+
+            var allBookingsDto = allBookings
+                .Select(b => BookingExtensions.ToDto(b, _context))
                 .ToList();
             
-            return Ok(allBookings);
+            return Ok(allBookingsDto);
         }
 
         [HttpGet("{Id}")]
@@ -107,10 +124,13 @@ namespace RoomBookingApi.Controllers
                 return NotFound(new { Message = "Cette salle n'existe pas." });
             }
 
-            var TimeFrom = TimeOnly.Parse(newBooking.TimeFrom);
-            var TimeTo = TimeOnly.Parse(newBooking.TimeTo);
+            var currentDate = DateOnly.FromDateTime(DateTime.Now);
+            var currentTime = TimeOnly.FromDateTime(DateTime.Now);
 
-            if ((newBooking.Day < DateOnly.FromDateTime(DateTime.Now) && TimeFrom < TimeOnly.FromDateTime(DateTime.Now)) || TimeFrom > TimeTo)
+            var timeFrom = TimeOnly.Parse(newBooking.TimeFrom);
+            var timeTo = TimeOnly.Parse(newBooking.TimeTo);
+
+            if (newBooking.Day < currentDate || (newBooking.Day == currentDate && timeFrom < currentTime) || timeFrom >= timeTo)
             {
                 return BadRequest(new { Message = "Veuillez renseigner une date future." });
             }
@@ -118,26 +138,112 @@ namespace RoomBookingApi.Controllers
             newBooking.IdOrganizer = userId;
             newBooking.Statut = Status.AllowedStatus[0];
 
-            _context.Bookings.Add(newBooking);
-
-            _context.SaveChanges();
-
-            var guests = BookingAdd.Guests;
-
-            if (guests != null && guests.Length > 0)
+            using (var transaction = _context.Database.BeginTransaction())
             {
-                AddGuests(newBooking.Id, guests);
+                try
+                {
+                    _context.Bookings.Add(newBooking);
+                    _context.SaveChanges();
+
+                    var guests = BookingAdd.Guests;
+                    if (guests == null || guests.Length == 0)
+                    {
+                        transaction.Rollback();
+                        return BadRequest(new { Message = "Veuillez inviter au moins 1 personne." });
+                    }
+
+                    AddGuests(newBooking.Id, guests);
+
+                    var equipments = BookingAdd.Equipments;
+                    if (equipments != null && equipments.Length > 0)
+                    {
+                        AddEquipments(newBooking.Id, equipments);
+                    }
+
+                    _context.SaveChanges();
+
+                    transaction.Commit();
+
+                    return Created(nameof(AddBooking), new { Id = newBooking.Id });
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError($"Erreur lors de l'ajout de la réservation: {ex.Message}");
+                    transaction.Rollback();
+                    return StatusCode(500, new { Message = "Une erreur est survenue lors de la création de la réservation. Veuillez réessayer." });
+                }
+            }
+        }
+
+        [HttpPut]
+        public ActionResult<object> UpdateBooking([FromBody] BookingUpdate BookingUpdate)
+        {
+            _logger.LogInformation($"Update booking {BookingUpdate.NewBooking.Id}");
+
+            var newBooking = BookingUpdate.NewBooking;
+            var token = BookingUpdate.Token;
+
+            var userId = _jwtTokenService.GetUserIdFromToken(token) ?? 0;
+            if (userId != newBooking.IdOrganizer)
+            {
+                return Unauthorized(new { Message = "Vous n'êtes pas l'organisateur de cette réunion, vous ne pouvez pas la modifier." });
             }
 
-            var equipments = BookingAdd.Equipments;
-
-            if (equipments != null && equipments.Length > 0)
+            var user = _context.Users.FirstOrDefault(u => u.Id == userId);
+            if (user == null)
             {
-                AddEquipments(newBooking.Id, equipments);
+                return NotFound(new { Message = "Token invalide ou utilisateur introuvable." });
             }
 
+            var oldBooking = _context.Bookings.FirstOrDefault(booking => booking.Id == newBooking.Id);
+            if (oldBooking == null)
+            {
+                return NotFound(new { Message = "Cette salle n'existe pas." });
+            }
+
+            if (newBooking.Statut == Status.AllowedStatus[1])
+            {
+                return BadRequest(new { Message = "Cette réunion est censée être terminée, vous ne pouvez plus la modifier." });
+            }
+
+            var currentDate = DateOnly.FromDateTime(DateTime.Now);
+            var currentTime = TimeOnly.FromDateTime(DateTime.Now);
+
+            var timeFrom = TimeOnly.Parse(newBooking.TimeFrom);
+            var timeTo = TimeOnly.Parse(newBooking.TimeTo);
+
+            if (newBooking.Day < currentDate || (newBooking.Day == currentDate && timeFrom < currentTime) || timeFrom >= timeTo)
+            {
+                return BadRequest(new { Message = "Veuillez renseigner une date future." });
+            }
+
+            var properties = typeof(Booking).GetProperties();
+
+            foreach (var property in properties)
+            {
+                if (property.Name == "Id" || property.Name == "Guests" || !property.CanWrite) continue;
+
+                var oldValue = property.GetValue(oldBooking);
+                var newValue = property.GetValue(newBooking);
+
+                if (!object.Equals(newValue, oldValue))
+                {
+                    property.SetValue(oldBooking, newValue);
+                }
+            }
+
+            var guests = BookingUpdate.Guests;
+            if (guests == null || guests.Length == 0)
+            {
+                return BadRequest(new { Message = "Veuillez inviter au moins 1 personne." });
+            }
+            UpdateGuests(oldBooking.Id, guests);
+
+            var equipments = BookingUpdate.Equipments;
+            UpdateEquipments(oldBooking.Id, equipments);
+
             _context.SaveChanges();
-            return Created(nameof(AddBooking), new { Id = newBooking.Id });
+            return Ok(new { Message = "Vaux modifications ont été enregistrées avec succès" });
         }
 
         [HttpGet("room/{roomId}")]
@@ -169,6 +275,33 @@ namespace RoomBookingApi.Controllers
             _logger.LogInformation($"DTO bookings count: {bookingDtos.Count}");
 
             return Ok(bookingDtos);
+        }
+
+        [HttpDelete("cancel/{id}")]
+        public ActionResult CancelBooking(int id, [FromQuery] string token)
+        {
+            _logger.LogInformation($"Annulation de la réservation {id}");
+
+            var userId = _jwtTokenService.GetUserIdFromToken(token);
+
+            if (userId == null)
+            {
+                return BadRequest(new { Message = "Token invalide ou utilisateur introuvable." });
+            }
+
+            var booking = _context.Bookings
+                .FirstOrDefault(b => b.Id == id);
+
+            if (booking == null)
+            {
+                return NotFound(new { Message = "Réservation non trouvée" });
+            }
+
+            booking.Statut = Status.AllowedStatus[2];
+
+            _context.SaveChanges();
+
+            return Ok(new { Message = "La réservation a été annulée avec succès" });
         }
 
         [HttpGet("export/csv")]
@@ -236,8 +369,9 @@ namespace RoomBookingApi.Controllers
             }
 
             List<string> availableHours = GenerateAvailableHours();
+            TimeOnly timeNow = TimeOnly.FromDateTime(DateTime.Now);
 
-            var bookedSlots = _context.Bookings
+            var bookingOfRoom = _context.Bookings
                 .Where(b => b.IdRoom == roomId && b.Day == selectedDate)
                 .ToList();
 
@@ -245,7 +379,14 @@ namespace RoomBookingApi.Controllers
                 .Where(time =>
                 {
                     var parsedTime = TimeOnly.Parse(time);
-                    return !bookedSlots.Any(slot => parsedTime >= TimeOnly.Parse(slot.TimeFrom) && parsedTime < TimeOnly.Parse(slot.TimeTo));
+
+                    bool isPastHour = selectedDate == DateOnly.FromDateTime(DateTime.Now) && parsedTime < timeNow;
+
+                    bool isAvailable = !bookingOfRoom.Any(slot =>
+                        parsedTime >= TimeOnly.Parse(slot.TimeFrom) &&
+                        parsedTime < TimeOnly.Parse(slot.TimeTo));
+
+                    return !isPastHour && isAvailable;
                 })
                 .ToList();
                 
@@ -279,6 +420,30 @@ namespace RoomBookingApi.Controllers
             _context.SaveChanges();
         }
 
+        private void UpdateGuests(int bookingId, int[] guestIds)
+        {
+            var currentGuests = _context.Guests
+                .Where(g => g.IdBooking == bookingId)
+                .ToList();
+
+            var guestsToRemove = currentGuests
+                .Where(g => !guestIds.Contains(g.IdUser))
+                .ToList();
+
+            _context.Guests.RemoveRange(guestsToRemove);
+
+            var guestsToAdd = guestIds
+                .Where(guestId => !currentGuests.Any(g => g.IdUser == guestId))
+                .Select(guestId => new Guest
+                {
+                    IdBooking = bookingId,
+                    IdUser = guestId
+                })
+                .ToList();
+
+            _context.Guests.AddRange(guestsToAdd);
+        }
+
         private void AddEquipments(int bookingId, NewEquipment[] equipments)
         {
             foreach (var equipment in equipments)
@@ -294,32 +459,44 @@ namespace RoomBookingApi.Controllers
             _context.SaveChanges();
         }
 
-        [HttpDelete("cancel/{id}")]
-        public ActionResult CancelBooking(int id, [FromQuery] string token)
+        private void UpdateEquipments(int bookingId, NewEquipment[]? equipments)
         {
-            _logger.LogInformation($"Annulation de la réservation {id}");
-
-            var userId = _jwtTokenService.GetUserIdFromToken(token);
-
-            if (userId == null)
+            var oldEquipments = _context.Equipments
+                .Where(e => e.IdBooking == bookingId)
+                .ToList();
+            
+            if(equipments == null || equipments.Length == 0)
             {
-                return BadRequest(new { Message = "Token invalide ou utilisateur introuvable." });
+                _context.Equipments.RemoveRange(oldEquipments);
             }
-
-            var booking = _context.Bookings
-                .FirstOrDefault(b => b.Id == id);
-
-            if (booking == null)
+            else
             {
-                return NotFound(new { Message = "Réservation non trouvée" });
+                foreach (var newEquipment in equipments)
+                {
+                    var existingEquipment = oldEquipments
+                        .FirstOrDefault(e => e.materiel == newEquipment.materiel);
+
+                    if (existingEquipment != null)
+                    {
+                        existingEquipment.number = newEquipment.number;
+                        oldEquipments.Remove(existingEquipment);
+                    }
+                    else
+                    {
+                        _context.Equipments.Add(new Equipment
+                        {
+                            IdBooking = bookingId,
+                            materiel = newEquipment.materiel,
+                            number = newEquipment.number
+                        });
+                    }
+                }
+
+                foreach (var equipmentToDelete in oldEquipments)
+                {
+                    _context.Equipments.Remove(equipmentToDelete);
+                }
             }
-
-            booking.Statut = Status.AllowedStatus[2];
-
-            _context.SaveChanges();
-
-            return Ok(new { Message = "La réservation a été annulée avec succès" });
         }
-
     }
 }

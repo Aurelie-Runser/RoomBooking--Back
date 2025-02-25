@@ -43,6 +43,7 @@ namespace RoomBookingApi.Models
         public string? RoomName { get; set; }
         public string? OrganizerFirstname { get; set; }
         public string? OrganizerLastname { get; set; }
+        public int[]? GuestsId { get; set; }
         public string[]? GuestsName { get; set; }
         public NewEquipment[]? EquipmentsList { get; set; }
     }
