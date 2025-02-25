@@ -285,8 +285,9 @@ namespace RoomBookingApi.Controllers
             }
 
             List<string> availableHours = GenerateAvailableHours();
+            TimeOnly timeNow = TimeOnly.FromDateTime(DateTime.Now);
 
-            var bookedSlots = _context.Bookings
+            var bookingOfRoom = _context.Bookings
                 .Where(b => b.IdRoom == roomId && b.Day == selectedDate)
                 .ToList();
 
@@ -294,7 +295,14 @@ namespace RoomBookingApi.Controllers
                 .Where(time =>
                 {
                     var parsedTime = TimeOnly.Parse(time);
-                    return !bookedSlots.Any(slot => parsedTime >= TimeOnly.Parse(slot.TimeFrom) && parsedTime < TimeOnly.Parse(slot.TimeTo));
+
+                    bool isPastHour = selectedDate == DateOnly.FromDateTime(DateTime.Now) && parsedTime < timeNow;
+
+                    bool isAvailable = !bookingOfRoom.Any(slot =>
+                        parsedTime >= TimeOnly.Parse(slot.TimeFrom) &&
+                        parsedTime < TimeOnly.Parse(slot.TimeTo));
+
+                    return !isPastHour && isAvailable;
                 })
                 .ToList();
                 
@@ -304,28 +312,13 @@ namespace RoomBookingApi.Controllers
         private List<string> GenerateAvailableHours()
         {
             var availableHours = new List<string>();
-
-            var now = DateTime.Now;
-            int currentHour = now.Hour;
-            int currentMinutes = now.Minute;
-
-            int startHour = Math.Max(7, currentHour);
-            int startMinutes = (currentMinutes % 15 == 0) ? currentMinutes : ((currentMinutes / 15) + 1) * 15;
-
-            if (startMinutes == 60) 
+            for (int hour = 7; hour <= 23; hour++)
             {
-                startHour++;
-                startMinutes = 0;
-            }
-
-            for (int hour = startHour; hour <= 23; hour++)
-            {
-                for (int minutes = (hour == startHour ? startMinutes : 0); minutes < 60; minutes += 15)
+                for (int minutes = 0; minutes < 60; minutes += 15)
                 {
                     availableHours.Add($"{hour:D2}:{minutes:D2}");
                 }
             }
-
             return availableHours;
         }
 
