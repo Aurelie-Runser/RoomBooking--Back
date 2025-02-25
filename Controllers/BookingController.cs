@@ -220,11 +220,11 @@ namespace RoomBookingApi.Controllers
             //     UpdateGuests(booking.Id, guests);
             // }
 
-            // var equipments = BookingAdd.Equipments;
-            // if (equipments != null && equipments.Length > 0)
-            // {
-            //     UpdateEquipments(booking.Id, equipments);
-            // }
+            var equipments = BookingAdd.Equipments;
+            if (equipments != null && equipments.Length > 0)
+            {
+                UpdateEquipments(oldBooking.Id, equipments);
+            }
 
             _context.SaveChanges();
             return Ok(new { Message = "Vaux modifications ont été enregistrées avec succès" });
@@ -418,5 +418,41 @@ namespace RoomBookingApi.Controllers
 
             _context.SaveChanges();
         }
+
+        private void UpdateEquipments(int bookingId, NewEquipment[] equipments)
+        {
+            var oldEquipments = _context.Equipments
+                .Where(e => e.IdBooking == bookingId)
+                .ToList();
+
+            foreach (var newEquipment in equipments)
+            {
+                var existingEquipment = oldEquipments
+                    .FirstOrDefault(e => e.materiel == newEquipment.materiel);
+
+                if (existingEquipment != null)
+                {
+                    existingEquipment.number = newEquipment.number;
+                    oldEquipments.Remove(existingEquipment);
+                }
+                else
+                {
+                    _context.Equipments.Add(new Equipment
+                    {
+                        IdBooking = bookingId,
+                        materiel = newEquipment.materiel,
+                        number = newEquipment.number
+                    });
+                }
+            }
+
+            foreach (var equipmentToDelete in oldEquipments)
+            {
+                _context.Equipments.Remove(equipmentToDelete);
+            }
+
+            _context.SaveChanges();
+        }
+
     }
 }
