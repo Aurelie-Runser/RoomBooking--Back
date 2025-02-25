@@ -138,28 +138,41 @@ namespace RoomBookingApi.Controllers
             newBooking.IdOrganizer = userId;
             newBooking.Statut = Status.AllowedStatus[0];
 
-            _context.Bookings.Add(newBooking);
-
-            _context.SaveChanges();
-
-            var guests = BookingAdd.Guests;
-
-            if (guests == null || guests.Length == 0)
+            using (var transaction = _context.Database.BeginTransaction())
             {
-                return BadRequest(new { Message = "Veuillez inviter au moins 1 personne." });
+                try
+                {
+                    _context.Bookings.Add(newBooking);
+                    _context.SaveChanges();
+
+                    var guests = BookingAdd.Guests;
+                    if (guests == null || guests.Length == 0)
+                    {
+                        transaction.Rollback();
+                        return BadRequest(new { Message = "Veuillez inviter au moins 1 personne." });
+                    }
+
+                    AddGuests(newBooking.Id, guests);
+
+                    var equipments = BookingAdd.Equipments;
+                    if (equipments != null && equipments.Length > 0)
+                    {
+                        AddEquipments(newBooking.Id, equipments);
+                    }
+
+                    _context.SaveChanges();
+
+                    transaction.Commit();
+
+                    return Created(nameof(AddBooking), new { Id = newBooking.Id });
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError($"Erreur lors de l'ajout de la réservation: {ex.Message}");
+                    transaction.Rollback();
+                    return StatusCode(500, new { Message = "Une erreur est survenue lors de la création de la réservation. Veuillez réessayer." });
+                }
             }
-
-            AddGuests(newBooking.Id, guests);
-
-            var equipments = BookingAdd.Equipments;
-
-            if (equipments != null && equipments.Length > 0)
-            {
-                AddEquipments(newBooking.Id, equipments);
-            }
-
-            _context.SaveChanges();
-            return Created(nameof(AddBooking), new { Id = newBooking.Id });
         }
 
         [HttpPut]
