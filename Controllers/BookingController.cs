@@ -162,6 +162,74 @@ namespace RoomBookingApi.Controllers
             return Created(nameof(AddBooking), new { Id = newBooking.Id });
         }
 
+        [HttpPut]
+        public ActionResult<object> UpdateBooking([FromBody] BookingUpdate BookingAdd)
+        {
+            _logger.LogInformation($"Update booking {BookingAdd.NewBooking.Id}");
+
+            var newBooking = BookingAdd.NewBooking;
+            var token = BookingAdd.Token;
+
+            var userId = _jwtTokenService.GetUserIdFromToken(token) ?? 0;
+            if (userId != newBooking.IdOrganizer)
+            {
+                return Unauthorized(new { Message = "Vous n'êtes pas l'organisateur de cette réunion, vous ne pouvez pas la modifier." });
+            }
+
+            var user = _context.Users.FirstOrDefault(u => u.Id == userId);
+            if (user == null)
+            {
+                return NotFound(new { Message = "Token invalide ou utilisateur introuvable." });
+            }
+
+            var oldBooking = _context.Bookings.FirstOrDefault(booking => booking.Id == newBooking.Id);
+            if (oldBooking == null)
+            {
+                return NotFound(new { Message = "Cette salle n'existe pas." });
+            }
+
+            var currentDate = DateOnly.FromDateTime(DateTime.Now);
+            var currentTime = TimeOnly.FromDateTime(DateTime.Now);
+
+            var timeFrom = TimeOnly.Parse(newBooking.TimeFrom);
+            var timeTo = TimeOnly.Parse(newBooking.TimeTo);
+
+            if (newBooking.Day < currentDate || (newBooking.Day == currentDate && timeFrom < currentTime) || timeFrom >= timeTo)
+            {
+                return BadRequest(new { Message = "Veuillez renseigner une date future." });
+            }
+
+            var properties = typeof(Booking).GetProperties();
+
+            foreach (var property in properties)
+            {
+                if (property.Name == "Id" || property.Name == "Guests" || !property.CanWrite) continue;
+
+                var oldValue = property.GetValue(oldBooking);
+                var newValue = property.GetValue(newBooking);
+
+                if (!object.Equals(newValue, oldValue))
+                {
+                    property.SetValue(oldBooking, newValue);
+                }
+            }
+
+            // var guests = BookingAdd.Guests;
+            // if (guests != null && guests.Length > 0)
+            // {
+            //     UpdateGuests(booking.Id, guests);
+            // }
+
+            // var equipments = BookingAdd.Equipments;
+            // if (equipments != null && equipments.Length > 0)
+            // {
+            //     UpdateEquipments(booking.Id, equipments);
+            // }
+
+            _context.SaveChanges();
+            return Ok(new { Message = "Vaux modifications ont été enregistrées avec succès" });
+        }
+
         [HttpGet("room/{roomId}")]
         public ActionResult<IEnumerable<BookingDto>> GetBookingsByRoom(int roomId)
         {
