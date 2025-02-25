@@ -144,10 +144,12 @@ namespace RoomBookingApi.Controllers
 
             var guests = BookingAdd.Guests;
 
-            if (guests != null && guests.Length > 0)
+            if (guests == null || guests.Length == 0)
             {
-                AddGuests(newBooking.Id, guests);
+                return BadRequest(new { Message = "Veuillez inviter au moins 1 personne." });
             }
+
+            AddGuests(newBooking.Id, guests);
 
             var equipments = BookingAdd.Equipments;
 
