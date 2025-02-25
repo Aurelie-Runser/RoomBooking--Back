@@ -294,5 +294,32 @@ namespace RoomBookingApi.Controllers
             _context.SaveChanges();
         }
 
+        [HttpDelete("cancel/{id}")]
+        public ActionResult CancelBooking(int id, [FromQuery] string token)
+        {
+            _logger.LogInformation($"Annulation de la réservation {id}");
+
+            var userId = _jwtTokenService.GetUserIdFromToken(token);
+
+            if (userId == null)
+            {
+                return BadRequest(new { Message = "Token invalide ou utilisateur introuvable." });
+            }
+
+            var booking = _context.Bookings
+                .FirstOrDefault(b => b.Id == id);
+
+            if (booking == null)
+            {
+                return NotFound(new { Message = "Réservation non trouvée" });
+            }
+
+            booking.Statut = Status.AllowedStatus[2];
+
+            _context.SaveChanges();
+
+            return Ok(new { Message = "La réservation a été annulée avec succès" });
+        }
+
     }
 }
