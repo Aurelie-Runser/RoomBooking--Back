@@ -442,8 +442,6 @@ namespace RoomBookingApi.Controllers
                 .ToList();
 
             _context.Guests.AddRange(guestsToAdd);
-
-            _context.SaveChanges();
         }
 
         private void AddEquipments(int bookingId, NewEquipment[] equipments)
@@ -499,9 +497,6 @@ namespace RoomBookingApi.Controllers
                     _context.Equipments.Remove(equipmentToDelete);
                 }
             }
-
-            _context.SaveChanges();
         }
-
     }
 }
