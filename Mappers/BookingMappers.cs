@@ -34,6 +34,7 @@ namespace RoomBookingApi.Mappers
             {
                 Id = booking.Id,
                 Name = booking.Name,
+                Description = booking.Description,
                 IdOrganizer = booking.IdOrganizer,
                 OrganizerLastname = user?.Lastname ?? "Inconnu",
                 OrganizerFirstname = user?.Firstname ?? "Inconnu",
