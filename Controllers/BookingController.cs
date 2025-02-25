@@ -48,22 +48,39 @@ namespace RoomBookingApi.Controllers
                 return BadRequest(new { Message = "Token invalide ou utilisateur introuvable." });
             }
 
+            var currentDateTime = DateTime.Now;
+
             var bookingsAsOrganizer = _context.Bookings
                 .Where(b => b.IdOrganizer == userId)
-                .Select(b => BookingExtensions.ToDto(b, _context))
                 .ToList();
 
             var bookingsAsGuest = _context.Bookings
                 .Where(b => b.Guests.Any(g => g.IdUser == userId))
-                .Select(b => BookingExtensions.ToDto(b, _context))
                 .ToList();
 
-            var allBookings = bookingsAsOrganizer
-                .Concat(bookingsAsGuest)
-                .Distinct()
+            var allBookings = bookingsAsOrganizer.Concat(bookingsAsGuest).Distinct().ToList();
+
+            foreach (var booking in allBookings)
+            {
+                if (booking.Statut != Status.AllowedStatus[1] && TimeOnly.TryParse(booking.TimeTo, out TimeOnly endTime))
+                {
+                    DateTime bookingEndTime = booking.Day.ToDateTime(endTime);
+
+                    if (bookingEndTime < currentDateTime)
+                    {
+                        booking.Statut = Status.AllowedStatus[1];
+                    }
+                }
+            }
+
+            _logger.LogInformation("Bookings Statut updtae successfully");
+            _context.SaveChanges();
+
+            var allBookingsDto = allBookings
+                .Select(b => BookingExtensions.ToDto(b, _context))
                 .ToList();
             
-            return Ok(allBookings);
+            return Ok(allBookingsDto);
         }
 
         [HttpGet("{Id}")]
@@ -169,6 +186,33 @@ namespace RoomBookingApi.Controllers
             _logger.LogInformation($"DTO bookings count: {bookingDtos.Count}");
 
             return Ok(bookingDtos);
+        }
+
+        [HttpDelete("cancel/{id}")]
+        public ActionResult CancelBooking(int id, [FromQuery] string token)
+        {
+            _logger.LogInformation($"Annulation de la réservation {id}");
+
+            var userId = _jwtTokenService.GetUserIdFromToken(token);
+
+            if (userId == null)
+            {
+                return BadRequest(new { Message = "Token invalide ou utilisateur introuvable." });
+            }
+
+            var booking = _context.Bookings
+                .FirstOrDefault(b => b.Id == id);
+
+            if (booking == null)
+            {
+                return NotFound(new { Message = "Réservation non trouvée" });
+            }
+
+            booking.Statut = Status.AllowedStatus[2];
+
+            _context.SaveChanges();
+
+            return Ok(new { Message = "La réservation a été annulée avec succès" });
         }
 
         [HttpGet("export/csv")]
@@ -293,33 +337,5 @@ namespace RoomBookingApi.Controllers
 
             _context.SaveChanges();
         }
-
-        [HttpDelete("cancel/{id}")]
-        public ActionResult CancelBooking(int id, [FromQuery] string token)
-        {
-            _logger.LogInformation($"Annulation de la réservation {id}");
-
-            var userId = _jwtTokenService.GetUserIdFromToken(token);
-
-            if (userId == null)
-            {
-                return BadRequest(new { Message = "Token invalide ou utilisateur introuvable." });
-            }
-
-            var booking = _context.Bookings
-                .FirstOrDefault(b => b.Id == id);
-
-            if (booking == null)
-            {
-                return NotFound(new { Message = "Réservation non trouvée" });
-            }
-
-            booking.Statut = Status.AllowedStatus[2];
-
-            _context.SaveChanges();
-
-            return Ok(new { Message = "La réservation a été annulée avec succès" });
-        }
-
     }
 }
