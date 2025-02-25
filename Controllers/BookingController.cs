@@ -124,10 +124,13 @@ namespace RoomBookingApi.Controllers
                 return NotFound(new { Message = "Cette salle n'existe pas." });
             }
 
-            var TimeFrom = TimeOnly.Parse(newBooking.TimeFrom);
-            var TimeTo = TimeOnly.Parse(newBooking.TimeTo);
+            var currentDate = DateOnly.FromDateTime(DateTime.Now);
+            var currentTime = TimeOnly.FromDateTime(DateTime.Now);
 
-            if ((newBooking.Day < DateOnly.FromDateTime(DateTime.Now) && TimeFrom < TimeOnly.FromDateTime(DateTime.Now)) || TimeFrom > TimeTo)
+            var timeFrom = TimeOnly.Parse(newBooking.TimeFrom);
+            var timeTo = TimeOnly.Parse(newBooking.TimeTo);
+
+            if (newBooking.Day < currentDate || (newBooking.Day == currentDate && timeFrom < currentTime) || timeFrom >= timeTo)
             {
                 return BadRequest(new { Message = "Veuillez renseigner une date future." });
             }
@@ -299,13 +302,28 @@ namespace RoomBookingApi.Controllers
         private List<string> GenerateAvailableHours()
         {
             var availableHours = new List<string>();
-            for (int hour = 7; hour <= 23; hour++)
+
+            var now = DateTime.Now;
+            int currentHour = now.Hour;
+            int currentMinutes = now.Minute;
+
+            int startHour = Math.Max(7, currentHour);
+            int startMinutes = (currentMinutes % 15 == 0) ? currentMinutes : ((currentMinutes / 15) + 1) * 15;
+
+            if (startMinutes == 60) 
             {
-                for (int minutes = 0; minutes < 60; minutes += 15)
+                startHour++;
+                startMinutes = 0;
+            }
+
+            for (int hour = startHour; hour <= 23; hour++)
+            {
+                for (int minutes = (hour == startHour ? startMinutes : 0); minutes < 60; minutes += 15)
                 {
                     availableHours.Add($"{hour:D2}:{minutes:D2}");
                 }
             }
+
             return availableHours;
         }
 
