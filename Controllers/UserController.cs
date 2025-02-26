@@ -126,7 +126,7 @@ namespace RoomBookingApi.Controllers
         }
 
         [HttpPut("admin/{token}")]
-        public ActionResult<IEnumerable<UserBase>> UpdateUsersAdmin([FromBody] UserForAdmin[] listUser, [FromRoute] string token)
+        public ActionResult<IEnumerable<UserBase>> UpdateUsersAdmin([FromBody] UserMinimal[] listUser, [FromRoute] string token)
         {
             var userId = _jwtTokenService.GetUserIdFromToken(token);
 

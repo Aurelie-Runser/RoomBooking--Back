@@ -431,7 +431,7 @@ namespace RoomBookingApi.Controllers
             _context.Guests.AddRange(guestsToAdd);
         }
 
-        private void AddEquipments(int bookingId, NewEquipment[] equipments)
+        private void AddEquipments(int bookingId, EquipmentBase[] equipments)
         {
             foreach (var equipment in equipments)
             {
@@ -446,7 +446,7 @@ namespace RoomBookingApi.Controllers
             _context.SaveChanges();
         }
 
-        private void UpdateEquipments(int bookingId, NewEquipment[]? equipments)
+        private void UpdateEquipments(int bookingId, EquipmentBase[]? equipments)
         {
             var oldEquipments = _context.Equipments
                 .Where(e => e.IdBooking == bookingId)
