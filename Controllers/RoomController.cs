@@ -42,6 +42,20 @@ namespace RoomBookingApi.Controllers
             return Ok(roomDtos);
         }
 
+        [HttpGet("short")]
+        public ActionResult<IEnumerable<Room>> GetRoomsShort()
+        {
+            _logger.LogInformation("Get rooms short format");
+
+            var rooms = _context.Rooms;
+
+           var roomsShort = _context.Rooms
+                .Select(r => new { Id = r.Id, Name = r.Name })
+                .ToList();
+
+            return Ok(roomsShort);
+        }
+
         [HttpGet("{Id}")]
         public ActionResult<RoomDto> GetRoomById(int id)
         {

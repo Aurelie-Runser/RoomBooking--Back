@@ -10,7 +10,7 @@ namespace RoomBookingApi.Models
         public required string Email { get; set; }
 
         [Required]
-        [StringLength(20, MinimumLength = 4, ErrorMessage = "Le mot de passe doit contenir entre 4 et 20 caractères.")]
+        [StringLength(20, MinimumLength = 3, ErrorMessage = "Le mot de passe doit contenir entre 4 et 20 caractères.")]
         public required string Password { get; set; }
     }
 
