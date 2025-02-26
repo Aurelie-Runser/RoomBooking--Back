@@ -31,6 +31,8 @@ namespace RoomBookingApi.Models
 
     public record User : UserBase
     {
+        [Required]
+        [StringLength(20, MinimumLength = 4, ErrorMessage = "Le mot de passe doit contenir entre 4 et 20 caractères.")]
         public string Password { get; set; } = string.Empty;
         public List<Guest> Guests { get; set; } = new();
 

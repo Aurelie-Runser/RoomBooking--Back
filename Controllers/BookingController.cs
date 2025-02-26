@@ -438,8 +438,8 @@ namespace RoomBookingApi.Controllers
                 _context.Equipments.Add(new Equipment
                 {
                     IdBooking = bookingId,
-                    materiel = equipment.materiel,
-                    number = equipment.number
+                    Materiel = equipment.Materiel,
+                    Number = equipment.Number
                 });
             }
 
@@ -461,11 +461,11 @@ namespace RoomBookingApi.Controllers
                 foreach (var newEquipment in equipments)
                 {
                     var existingEquipment = oldEquipments
-                        .FirstOrDefault(e => e.materiel == newEquipment.materiel);
+                        .FirstOrDefault(e => e.Materiel == newEquipment.Materiel);
 
                     if (existingEquipment != null)
                     {
-                        existingEquipment.number = newEquipment.number;
+                        existingEquipment.Number = newEquipment.Number;
                         oldEquipments.Remove(existingEquipment);
                     }
                     else
@@ -473,8 +473,8 @@ namespace RoomBookingApi.Controllers
                         _context.Equipments.Add(new Equipment
                         {
                             IdBooking = bookingId,
-                            materiel = newEquipment.materiel,
-                            number = newEquipment.number
+                            Materiel = newEquipment.Materiel,
+                            Number = newEquipment.Number
                         });
                     }
                 }

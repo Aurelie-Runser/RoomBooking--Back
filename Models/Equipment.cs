@@ -9,11 +9,11 @@ namespace RoomBookingApi.Models
 
         [Required]
         [EquipmentValidation]
-        public string materiel { get; set; } = "";
+        public string Materiel { get; set; } = "";
 
         [Required]
         [Range(0, 1000)]
-        public int number { get; set; }
+        public int Number { get; set; }
     }
 
     public class Equipment : EquipmentBase

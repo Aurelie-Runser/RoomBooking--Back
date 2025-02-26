@@ -15,6 +15,7 @@ namespace RoomBookingApi.Models
         [StringLength(50)]
         public string Name { get; set; } = string.Empty;
 
+        [MaxFileSize(20)]
         public byte[]? Picture { get; set; }
 
         [Required]

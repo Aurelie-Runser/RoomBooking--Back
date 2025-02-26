@@ -32,8 +32,8 @@ namespace RoomBookingApi.Mappers
                 .Where(eq => eq.IdBooking == booking.Id)
                 .Select(eq => new EquipmentBase
                     {
-                        materiel = eq.materiel,
-                        number = eq.number
+                        Materiel = eq.Materiel,
+                        Number = eq.Number
                     })
                 .ToList()
                 .ToArray();
