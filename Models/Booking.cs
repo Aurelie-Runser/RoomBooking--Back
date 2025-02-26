@@ -26,9 +26,11 @@ namespace RoomBookingApi.Models
         public DateOnly Day { get; set; }
 
         [Required]
+        [HoursFromValidation]
         public string TimeFrom { get; set; } = "";
 
         [Required]
+        [HoursToValidation]
         public string TimeTo { get; set; } = "";
 
         [Required]

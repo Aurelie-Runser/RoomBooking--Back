@@ -368,10 +368,10 @@ namespace RoomBookingApi.Controllers
                 return BadRequest("Format de date invalide");
             }
 
-            List<string> availableHours = GenerateAvailableHours();
+            List<string> availableHours = Hours.AllowedHoursFrom.ToList();
             TimeOnly timeNow = TimeOnly.FromDateTime(DateTime.Now);
 
-            var bookingOfRoom = _context.Bookings
+            var bookingsOfRoom = _context.Bookings
                 .Where(b => b.IdRoom == roomId && b.Day == selectedDate)
                 .ToList();
 
@@ -382,7 +382,7 @@ namespace RoomBookingApi.Controllers
 
                     bool isPastHour = selectedDate == DateOnly.FromDateTime(DateTime.Now) && parsedTime < timeNow;
 
-                    bool isAvailable = !bookingOfRoom.Any(slot =>
+                    bool isAvailable = !bookingsOfRoom.Any(slot =>
                         parsedTime >= TimeOnly.Parse(slot.TimeFrom) &&
                         parsedTime < TimeOnly.Parse(slot.TimeTo));
 
@@ -391,19 +391,6 @@ namespace RoomBookingApi.Controllers
                 .ToList();
                 
             return Ok(availableStartHours);
-        }
-
-        private List<string> GenerateAvailableHours()
-        {
-            var availableHours = new List<string>();
-            for (int hour = 7; hour <= 23; hour++)
-            {
-                for (int minutes = 0; minutes < 60; minutes += 15)
-                {
-                    availableHours.Add($"{hour:D2}:{minutes:D2}");
-                }
-            }
-            return availableHours;
         }
 
         private void AddGuests(int bookingId, int[] guestIds)
